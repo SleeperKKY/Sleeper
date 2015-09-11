@@ -1,0 +1,24 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent" android:layout_height="match_parent"
+        android:id="@+id/fragmentContainer"
+        android:visibility="visible">
+
+        <!--
+        <fragment
+            android:id="@+id/viewPagerFragment"
+            tools:layout="@layout/fragment_main"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:name="org.androidtown.sleeper.ViewPagerFragment"
+            android:tag="ViewPagerFragment"
+            />
+            -->
+
+    </FrameLayout>
+
+</FrameLayout>
