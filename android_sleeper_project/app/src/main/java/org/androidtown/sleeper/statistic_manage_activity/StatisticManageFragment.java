@@ -92,6 +92,8 @@ public class StatisticManageFragment extends Fragment{
         final TableLayout tableLayout = (TableLayout)rootView.findViewById(R.id.tableLayout);
 
         for (int i = 0; i <graphList.size(); i++) {
+
+            Log.i("graph", Integer.toString(i)) ;
             RadioButton button = new RadioButton(mainActivity.getApplicationContext());
             button.setId(i);
             button.setText(graphList.get(i).getTitle());
@@ -106,7 +108,7 @@ public class StatisticManageFragment extends Fragment{
                     tableLayout.removeAllViews();
                     ((RadioGroup) view.getParent()).check(view.getId());
                     int v = view.getId();
-                    graph=graphList.get(v);
+                    graph = graphList.get(v);
 
                     graph.getViewport().setYAxisBoundsManual(true);
                     graph.getViewport().setMinY(0);
@@ -119,14 +121,13 @@ public class StatisticManageFragment extends Fragment{
                     graph.getViewport().setScrollable(true);
                     //graph.getViewport().setScalable(true);
 
-                    frameLayout.addView(graph);
-
                     TextView[] dataNameText = new TextView[dataNameList.size()];
                     TextView[] dataText = new TextView[dataList.size()];
 
+                    frameLayout.addView(graph);
 
-                    for(int i=0; i<dataNameList.size(); i++)
-                    {
+
+                    for (int i = 0; i < dataNameList.size(); i++) {
                         TableRow tableRow = new TableRow(mainActivity.getApplicationContext());
 
                         dataNameText[i] = new TextView(mainActivity.getApplicationContext());
@@ -147,11 +148,10 @@ public class StatisticManageFragment extends Fragment{
                     }
 
 
+                    //�ð��� ǥ������ textview�� �ϳ� �����Ѵ�.
 
-                //�ð��� ǥ������ textview�� �ϳ� �����Ѵ�.
-
-                    timeNameTextView = new TextView(mainActivity.getApplicationContext()) ;
-                    timeDataTextView = new TextView(mainActivity.getApplicationContext()) ;
+                    timeNameTextView = new TextView(mainActivity.getApplicationContext());
+                    timeDataTextView = new TextView(mainActivity.getApplicationContext());
                     timeNameTextView.setText("Time:");
                     timeNameTextView.setTextColor(0xFF909090);
                     timeNameTextView.setTextSize(30);
@@ -166,96 +166,94 @@ public class StatisticManageFragment extends Fragment{
 
                     tableLayout.addView(timetableRow);
 
-                //�ø���1, �ø���2�� ���� textview �迭���� ���� �����Ѵ�.
-                variableDataTextSeries1=new TextView[graphList.get(0).getSeries().size()] ;
-                variableDataTextSeries2=new TextView[graphList.get(0).getSecondScale().getSeries().size()] ;
-                variableDataNameTextSeries1= new TextView[graphList.get(0).getSeries().size()] ;
-                variableDataNameTextSeries2=new TextView[graphList.get(0).getSecondScale().getSeries().size()] ;
+                    //�ø���1, �ø���2�� ���� textview �迭���� ���� �����Ѵ�.
+                    variableDataTextSeries1 = new TextView[graphList.get(0).getSeries().size()];
+                    variableDataTextSeries2 = new TextView[graphList.get(0).getSecondScale().getSeries().size()];
+                    variableDataNameTextSeries1 = new TextView[graphList.get(0).getSeries().size()];
+                    variableDataNameTextSeries2 = new TextView[graphList.get(0).getSecondScale().getSeries().size()];
 
-                //������1 �� textview�� tablerow�� ����Ѵ�.
-                for(int i=0;i<graphList.get(0).getSeries().size();i++)
-                {
+                    //������1 �� textview�� tablerow�� ����Ѵ�.
+                    for (int i = 0; i < graphList.get(0).getSeries().size(); i++) {
 
-                    TableRow tableRowScale1 = new TableRow(mainActivity.getApplicationContext());
+                        TableRow tableRowScale1 = new TableRow(mainActivity.getApplicationContext());
 
-                    variableDataNameTextSeries1[i]=new TextView(mainActivity.getApplicationContext()) ;
-                    variableDataTextSeries1[i]=new TextView(mainActivity.getApplicationContext()) ;
-                    variableDataNameTextSeries1[i].setText(graphList.get(0).getSeries().get(i).getTitle());
-                    variableDataNameTextSeries1[i].setTextColor(0xFF909090);
-                    variableDataNameTextSeries1[i].setTextSize(30);
-                    variableDataTextSeries1[i].setText("move SeekBar");
-                    variableDataTextSeries1[i].setTextColor(0xFF909090);
-                    variableDataTextSeries1[i].setTextSize(30);
-                    tableRowScale1.addView(variableDataNameTextSeries1[i]) ;
-                    tableRowScale1.addView(variableDataTextSeries1[i]);
+                        variableDataNameTextSeries1[i] = new TextView(mainActivity.getApplicationContext());
+                        variableDataTextSeries1[i] = new TextView(mainActivity.getApplicationContext());
+                        variableDataNameTextSeries1[i].setText(graphList.get(0).getSeries().get(i).getTitle());
+                        variableDataNameTextSeries1[i].setTextColor(0xFF909090);
+                        variableDataNameTextSeries1[i].setTextSize(30);
+                        variableDataTextSeries1[i].setText("move SeekBar");
+                        variableDataTextSeries1[i].setTextColor(0xFF909090);
+                        variableDataTextSeries1[i].setTextSize(30);
+                        tableRowScale1.addView(variableDataNameTextSeries1[i]);
+                        tableRowScale1.addView(variableDataTextSeries1[i]);
 
-                    tableLayout.addView(tableRowScale1) ;
-                }
+                        tableLayout.addView(tableRowScale1);
+                    }
 
-                for(int i=0;i<graphList.get(0).getSecondScale().getSeries().size();i++)
-                {
+                    for (int i = 0; i < graphList.get(0).getSecondScale().getSeries().size(); i++) {
 
-                    TableRow tableRowScale2 = new TableRow(mainActivity.getApplicationContext());
+                        TableRow tableRowScale2 = new TableRow(mainActivity.getApplicationContext());
 
-                    variableDataNameTextSeries2[i]=new TextView(mainActivity.getApplicationContext()) ;
-                    variableDataTextSeries2[i]=new TextView(mainActivity.getApplicationContext()) ;
-                    variableDataNameTextSeries2[i].setText(graphList.get(0).getSecondScale().getSeries().get(i).getTitle());
-                    variableDataNameTextSeries2[i].setTextColor(0xFF909090);
-                    variableDataNameTextSeries2[i].setTextSize(30);
-                    variableDataTextSeries2[i].setText("move SeekBar");
-                    variableDataTextSeries2[i].setTextColor(0xFF909090);
-                    variableDataTextSeries2[i].setTextSize(30);
-                    tableRowScale2.addView(variableDataNameTextSeries2[i]) ;
-                    tableRowScale2.addView(variableDataTextSeries2[i]) ;
+                        variableDataNameTextSeries2[i] = new TextView(mainActivity.getApplicationContext());
+                        variableDataTextSeries2[i] = new TextView(mainActivity.getApplicationContext());
+                        variableDataNameTextSeries2[i].setText(graphList.get(0).getSecondScale().getSeries().get(i).getTitle());
+                        variableDataNameTextSeries2[i].setTextColor(0xFF909090);
+                        variableDataNameTextSeries2[i].setTextSize(30);
+                        variableDataTextSeries2[i].setText("move SeekBar");
+                        variableDataTextSeries2[i].setTextColor(0xFF909090);
+                        variableDataTextSeries2[i].setTextSize(30);
+                        tableRowScale2.addView(variableDataNameTextSeries2[i]);
+                        tableRowScale2.addView(variableDataTextSeries2[i]);
 
-                    tableLayout.addView(tableRowScale2) ;
-                }
+                        tableLayout.addView(tableRowScale2);
+                    }
 
-                horizontalAxisSeekBar=(SeekBar)rootView.findViewById(R.id.seekBar) ;
+                    horizontalAxisSeekBar = (SeekBar) rootView.findViewById(R.id.seekBar);
 
-                horizontalAxisSeekBar.setMax(statManager.getDataSize()-2);
-                horizontalAxisSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-                    @Override
-                    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                    horizontalAxisSeekBar.setMax(statManager.getDataSize() - 2);
+                    horizontalAxisSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                        @Override
+                        public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
 
-                        Series<DataPoint> series=graphList.get(0).getSeries().get(0);
-                        Series<DataPoint> series2=graphList.get(0).getSecondScale().getSeries().get(0);
+                            Series<DataPoint> series = graphList.get(0).getSeries().get(0);
+                            Series<DataPoint> series2 = graphList.get(0).getSecondScale().getSeries().get(0);
 
-                        //Log.i("progress bar",Integer.toString(progress)) ;
-                        SimpleDateFormat transFormat = new SimpleDateFormat("HH:mm");
-                        timeDataTextView.setText(String.valueOf(transFormat.format(series.getValues(statManager.getXData()[progress+1],statManager.getXData()[progress]).next().getX()))) ;
-                       // timeDataTextView.setText(String.valueOf(transFormat.format(series.getHighestValueX()))) ;
-                        //Toast toast = Toast.makeText(mainActivity.getApplicationContext(),
-                        //        String.valueOf(series.getValues(statManager.getXData()[progress+1], statManager.getXData()[progress]).next().getX()), Toast.LENGTH_LONG);
-                       // toast.setGravity(Gravity.CENTER, 0, 0);
-                       // toast.show();
-                        for(int i=0;i<graphList.get(0).getSeries().size();i++){
+                            //Log.i("progress bar",Integer.toString(progress)) ;
+                            SimpleDateFormat transFormat = new SimpleDateFormat("HH:mm");
+                            timeDataTextView.setText(String.valueOf(transFormat.format(series.getValues(statManager.getXData()[progress + 1], statManager.getXData()[progress]).next().getX())));
+                            // timeDataTextView.setText(String.valueOf(transFormat.format(series.getHighestValueX()))) ;
+                            //Toast toast = Toast.makeText(mainActivity.getApplicationContext(),
+                            //        String.valueOf(series.getValues(statManager.getXData()[progress+1], statManager.getXData()[progress]).next().getX()), Toast.LENGTH_LONG);
+                            // toast.setGravity(Gravity.CENTER, 0, 0);
+                            // toast.show();
+                            for (int i = 0; i < graphList.get(0).getSeries().size(); i++) {
 
-                            variableDataTextSeries1[i].setText(String.valueOf(series.getValues(statManager.getXData()[progress+1],statManager.getXData()[progress]).next().getY())) ;
+                                variableDataTextSeries1[i].setText(String.valueOf(series.getValues(statManager.getXData()[progress + 1], statManager.getXData()[progress]).next().getY()));
+
+                            }
+
+                            for (int i = 0; i < graphList.get(0).getSecondScale().getSeries().size(); i++) {
+
+                                variableDataTextSeries2[i].setText(String.valueOf(series2.getValues(statManager.getXData()[progress + 1], statManager.getXData()[progress]).next().getY()));
+
+                            }
 
                         }
 
-                        for(int i=0;i<graphList.get(0).getSecondScale().getSeries().size();i++){
-
-                            variableDataTextSeries2[i].setText(String.valueOf(series2.getValues(statManager.getXData()[progress+1],statManager.getXData()[progress]).next().getY())) ;
+                        @Override
+                        public void onStartTrackingTouch(SeekBar seekBar) {
 
                         }
 
-                    }
+                        @Override
+                        public void onStopTrackingTouch(SeekBar seekBar) {
 
-                    @Override
-                    public void onStartTrackingTouch(SeekBar seekBar) {
+                        }
+                    });
 
-                    }
-
-                    @Override
-                    public void onStopTrackingTouch(SeekBar seekBar) {
-
-                    }
-                });
-            }
+                }
         });
-
     }
 }
 

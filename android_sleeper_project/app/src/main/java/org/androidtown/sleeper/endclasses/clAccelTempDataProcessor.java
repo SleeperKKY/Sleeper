@@ -518,7 +518,7 @@ public class clAccelTempDataProcessor extends clDataProcessor implements clDataP
 		graph.getGridLabelRenderer().setNumHorizontalLabels(6); // only 4 because of the space
 		graph.getGridLabelRenderer().setNumVerticalLabels(3);
 		graph.getGridLabelRenderer().setHorizontalAxisTitle("Time");
-		graph.getGridLabelRenderer().setVerticalAxisTitle("Movement Level");
+		graph.getGridLabelRenderer().setVerticalAxisTitle("Sleep Level");
 		graph.getGridLabelRenderer().setVerticalLabelsSecondScaleColor(Color.rgb(255, 120, 120));
 		sleepLevelSeries.setTitle("SleepLevel");
 		tempSeries.setTitle("Temp");

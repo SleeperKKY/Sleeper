@@ -254,9 +254,9 @@ public abstract class clDataProcessor implements clComManager.IMessageListener {
         //private int smallMovementCnt=0 ;
        // private int largeMovementCnt=0 ;
         //private int slightMovementCnt=0 ;
-        public static final int AWAKE = 0 ;
+        public static final int AWAKE = 2 ;
         public static final int REM = 1;
-        public static final int DEEP = 2 ;
+        public static final int DEEP = 0 ;
 
         //private int intensityList_offset=0 ;
         private SensorEventListener sensorEventListener=null ;
