@@ -36,11 +36,9 @@ And **clDataProcessor.clDatabaseManager** extends SQLiteOpenHelper to use databa
 interface so if developer want to store data of each tracking then implement this interface and register on **clDatabaseManager**. Interface declaration is like shown below:
 
 
-'''
- void setDB(SQLiteOpenHelper db) ;         
- void onInsertSummaryTable(int rowId) ; 
- void onDeleteSummaryTable(int rowId) ;
-'''
+        void setDB(SQLiteOpenHelper db) ;         
+        void onInsertSummaryTable(int rowId) ; 
+        void onDeleteSummaryTable(int rowId) ;
 
 
 *Mechanism is like, when tracking starts, **clDataprocessor** inserts new row with row id and other columns. Then if you implemented and registered that interface on clDatabaseManager,
