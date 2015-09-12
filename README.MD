@@ -34,15 +34,20 @@ to get sleep stage output.
 And **clDataProcessor.clDatabaseManager** extends SQLiteOpenHelper to use database to manage **dataSummary** table, which store 'start time',
 'end time', 'date', and 'row id'. **clDataProcessor** insert this table at every start and stop of tracking. Inside, there is **IDbChangeListener**
 interface so if developer want to store data of each tracking then implement this interface and register on **clDatabaseManager**. Interface declaration is like shown below:
+
+
 '''
  void setDB(SQLiteOpenHelper db) ;         
  void onInsertSummaryTable(int rowId) ; 
  void onDeleteSummaryTable(int rowId) ;
 '''
+
+
 *Mechanism is like, when tracking starts, **clDataprocessor** inserts new row with row id and other columns. Then if you implemented and registered that interface on clDatabaseManager,
 it will call **onInsertSummaryTable**. In this method, you should create new table of your own with rowId to store your sleep data. For example, if you have table with name "dataTable" and
 row id is '2' when onInsertSummaryTable is called, then you actually have to create "dataTable2", "your_table_name"+"inserted_row_id_in_dataSummary_table" so that your table can sync with
 dataSummary table's each row. **onDeleteSummaryTable** works similar, but you currently, you have to just drop your table. The example of this approach is in **endclasses** folder.
+
 
 ###communication_manager
 Communication manager package enable you to communicate with remote device via wifi. It consists of **clComManager**, **clMessage**, **clDeviceMessageConverter**, **clRequestMessage**, **clResponseMessage**.
@@ -53,6 +58,7 @@ That's why we created **clDeviceMessageConverter**, device specific message maki
 Below is how message is being sent to remote device as request and sent back to app from device as response:
 
 Request: make device message by clDeviceMessageConverter -> put device message in clRequestMessage -> send using clComManager -> (clComManager)send message and waiting for response
+
 Response: (clComManager)message arrived remote device -> (clComManager)make response message and call onReceiveMessageEvent -> get response message -> check what device message by identifying device id
 		  -> get data and do something with that data.
 		  
