@@ -16,7 +16,7 @@ advice to design of classes, other feature to add or even harsh feedback!!.*
 of 'app_manager' package, 'communition_manager', 'dataprocessor_manager'.* 
 
 ###app_manager
-*App_manager package is head part that does control trivial things other than tracking sleep tracking like broadcasting alarm intent, get wakelock sort of thing.
+*App_manager package is head part that does control trivial things other than tracking sleep tracking like broadcasting alarm intent, get wakelock sort of thing.*
 
 ###dataprocessor_manager 
 *Dataprocessor_manager package is where actual tracking of sleep is taking place. It uses libsvm library made by 
