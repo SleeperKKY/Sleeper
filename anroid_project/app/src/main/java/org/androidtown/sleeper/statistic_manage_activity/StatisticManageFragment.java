@@ -51,19 +51,18 @@ public class StatisticManageFragment extends Fragment{
     private CheckBox[] checkboxes=null ;
     private GraphView graph=null ;
     private SeekBar  horizontalAxisSeekBar=null ;
-    TextView horizontalAxisTextView_Time;
-    TextView horizontalAxisTextView_SleepLevel;
-    private int position=0 ;
     private MainActivity mainActivity;
     private List<GraphView> graphList;
     private List<String> dataNameList;
     private List<String> dataList;
-    TextView[] variableDataTextSeries1;
-    TextView[] variableDataTextSeries2;
-    TextView timeNameTextView;
-    TextView timeDataTextView;
-    TextView[] variableDataNameTextSeries1;
-    TextView[] variableDataNameTextSeries2;
+    private TextView[] variableDataTextSeries1;
+    private TextView[] variableDataTextSeries2;
+    private TextView timeNameTextView;
+    private TextView timeDataTextView;
+    private TextView[] variableDataNameTextSeries1;
+    private TextView[] variableDataNameTextSeries2;
+
+    public static final String Tag="StatisticManageFragment" ;
 
 
     @Override
@@ -72,7 +71,10 @@ public class StatisticManageFragment extends Fragment{
         rootView=inflater.inflate(R.layout.layout_statistic_manage,container,false) ;
 
         //Log.i(toString(), "On Create View called") ;
-        InitDisplay() ;
+
+        //display only if statmanager is set
+        if(statManager!=null)
+            InitDisplay() ;
 
         return rootView ;
     }
@@ -80,7 +82,6 @@ public class StatisticManageFragment extends Fragment{
     private void InitDisplay() {
 
         mainActivity = (MainActivity) getActivity();
-        statManager = mainActivity.getApp().getDataProcessor().createStatManager(position);
 
         graphList=statManager.getGraphList() ;
         dataNameList=statManager.getStaticDataNameList();
@@ -253,86 +254,14 @@ public class StatisticManageFragment extends Fragment{
                     });
 
                 }
-        });
-    }
-}
-
-
-
-    public void setTablePosition(int pos){
-
-        this.position=pos ;
-    }
-
-
-/*
-    private void AddNewSeries(int dataIndex){
-
-        DataPoint[] dataPoints = statManager.getFirstScaleData() ;
-        DataPoint[] secondDataPoints=statManager.getSecondScaleData() ;
-
-        LineGraphSeries<DataPoint> series = new LineGraphSeries<>(dataPoints);
-        series.setTitle(statManager.getFirstScaleDataName());
-
-        LineGraphSeries<DataPoint> series2 = new LineGraphSeries<>(secondDataPoints) ;
-        series.setTitle(statManager.getSecondScaleDataName()) ;
-
-        graph.addSeries(series) ;
-        graph.getSecondScale().addSeries(series2);
-    }
-    */
-
-
-
-    /*
-    private void InitGraph(){
-
-        // set date label formatter
-        graph.getGridLabelRenderer().setLabelFormatter(new DateAsXAxisLabelFormatter(getActivity(),
-                DateFormat.getTimeInstance()));
-        graph.getGridLabelRenderer().setNumHorizontalLabels(5); // only 4 because of the space
-       // graph.getGridLabelRenderer().setHorizontalAxisTitle(statManager.getHorizontalAxisName());
-        //graph.getGridLabelRenderer().setVerticalAxisTitle(statManager.getVerticalAxisName());
-
-        //add series into graph
-        DataPoint[] firstDataPoints ;
-        DataPoint[] secondDataPoints ;
-
-
-        for(int i=0;i<statManager.getDataSize();i++) {
-
-           firstDataPoints = statManager.getData(clStatManagerAlpha.FIRST,i);
-            secondDataPoints = statManager.getData(clStatManagerAlpha.SECOND,i);
-
-            LineGraphSeries<DataPoint> series1 = new LineGraphSeries<>(firstDataPoints);
-            series1.setTitle(statManager.getDataName(clStatManagerAlpha.FIRST,i));
-
-            LineGraphSeries<DataPoint> series2 = new LineGraphSeries<>(secondDataPoints);
-            series2.setTitle(statManager.getDataName(clStatManagerAlpha.SECOND,i));
-
-            graph.addSeries(series1);
-            graph.getSecondScale().addSeries(series2);
+            });
         }
-
-        DataPoint[] dataPoints = statManager.getData(clStatManagerAlpha.FIRST,0);
-        // set manual x bounds to have nice steps
-
-        graph.getViewport().setYAxisBoundsManual(true);
-        graph.getViewport().setMinY(0);
-        graph.getViewport().setMaxY(8);
-
-
-        graph.getViewport().setXAxisBoundsManual(true);
-        graph.getViewport().setMinX(dataPoints[0].getX());
-        graph.getViewport().setMaxX(dataPoints[dataPoints.length - 1].getX());
-
-
-        graph.onDataChanged(false, false);
-        graph.getViewport().setScrollable(true);
-        graph.getViewport().setScalable(true);
-
-
     }
 
-    */
+    //set statManager
+    public void setStatManager(clStatManager statManager){
+
+        this.statManager=statManager ;
+    }
+
 }

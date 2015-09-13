@@ -14,7 +14,9 @@ import org.androidtown.sleeper.sleep_manage_activity.SleepManageFragment;
 import org.androidtown.sleeper.statistic_manage_activity.StatisticManageSelectFragment;
 
 /**
- * Created by Administrator on 2015-08-17.
+ * ViewPagerFragment. This manages table view. Currently, there're only Sleep, Statistic tables
+ * attached to this view. Developer can add more table if they want by modifiying 'FragmentCount' variable,
+ * InitFragments method.
  */
 public class ViewPagerFragment extends Fragment {
 
@@ -22,6 +24,8 @@ public class ViewPagerFragment extends Fragment {
     private String[] fragmentTabNames=null ;
     private View rootView=null ;
     private static int FragmentCount=2 ;
+
+    public static final String Tag="ViewPagerFragment" ;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
@@ -59,7 +63,7 @@ public class ViewPagerFragment extends Fragment {
     /**
      * fragment adapter of view pager fragment
      */
-    public class MainFragmentPagerAdapter extends FragmentPagerAdapter{
+    private class MainFragmentPagerAdapter extends FragmentPagerAdapter{
 
 
         public MainFragmentPagerAdapter(FragmentManager fm) {

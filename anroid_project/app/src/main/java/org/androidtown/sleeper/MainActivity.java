@@ -18,7 +18,10 @@ import org.androidtown.sleeper.propclasses.com_manager.clComManager;
 import org.androidtown.sleeper.sleep_manage_activity.DuringSleepFragment;
 import org.androidtown.sleeper.statistic_manage_activity.StatisticManageFragment;
 
-
+/**
+ * Main activity. It is nothing more than just central repository for many fragment. It currently
+ * only offers access app and fragment manager.
+ */
 public class MainActivity extends FragmentActivity {
 
     /**
@@ -36,9 +39,13 @@ public class MainActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //create view pager fragment and inflate in fragmentContainer
+        //in fragmentContainer frame layout, different views are attached, including
+        //table's view and also other views that need to cover all screen.
         viewPagerFragment=new ViewPagerFragment() ;
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainer, viewPagerFragment, "ViewPagerFragment").commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainer, viewPagerFragment, ViewPagerFragment.Tag).commit();
 
+        //create user defined dataprocessor and attach to app
         clDataProcessor dataProcessor = new clAccelTempDataProcessor(this, new clComManager());
         App = new clApp(this,dataProcessor) ;
 
@@ -90,25 +97,6 @@ public class MainActivity extends FragmentActivity {
     }
 
     /**
-     * Start sleep mode, which measures sleep levels to control device
-     * @param ringTimeMillis time in millisecond that alarm will ring
-     *
-     */
-    @Deprecated
-    public void startSleepMode(long ringTimeMillis) {
-
-
-        DuringSleepFragment duringSleepFragment=new DuringSleepFragment() ;
-        duringSleepFragment.setAlarmTime(ringTimeMillis);
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainer,duringSleepFragment,"DuringSleepFragment").addToBackStack(null).commit() ;
-        //start sleep mode
-        App.startSleepMode(ringTimeMillis);
-
-        Toast.makeText(this, "Sleep Mode Started", Toast.LENGTH_SHORT).show() ;
-
-    }
-
-    /**
      *Returns App model
      * @return App model
      */
@@ -117,39 +105,15 @@ public class MainActivity extends FragmentActivity {
         return App;
     }
 
-    /**
-     * Stop sleep mode
-     */
-    @Deprecated
-    public void stopSleepMode(){
-
-        getSupportFragmentManager().popBackStack();
-       // getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainer,viewPagerFragment,"ViewPagerFragment").commit() ;
-        App.stopSleepMode();
-
-        Toast.makeText(this,"Sleep Mode Stopped",Toast.LENGTH_SHORT).show() ;
-    }
-
     @Override
     public void onBackPressed() {
 
-        if(getSupportFragmentManager().findFragmentByTag("DuringSleepFragment")!=null) {
+        if(getSupportFragmentManager().findFragmentByTag(DuringSleepFragment.Tag)!=null) {
             App.stopSleepMode();
             Toast.makeText(this, "Sleep Mode Stopped", Toast.LENGTH_SHORT).show();
         }
 
         super.onBackPressed();
-    }
-
-    @Deprecated
-    public void ViewStatistic(int position) {
-
-
-        StatisticManageFragment statisticManageFragment=new StatisticManageFragment() ;
-        statisticManageFragment.setTablePosition(position);
-
-        //getSupportFragmentManager().popBackStack();
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainer,statisticManageFragment,"StatisticManageFragment").addToBackStack(null).commit() ;
     }
 
 }

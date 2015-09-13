@@ -24,6 +24,7 @@ import java.util.Calendar;
  */
 public class AutoModeFragment extends Fragment{
 
+    public static final String Tag="AutoModeFragment" ;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState){
@@ -67,7 +68,7 @@ public class AutoModeFragment extends Fragment{
                 DuringSleepFragment duringSleepFragment = new DuringSleepFragment();
                 duringSleepFragment.setAlarmTime(ringTimeMillis);
                 mainActivity.getSupportFragmentManager().beginTransaction().
-                        replace(R.id.fragmentContainer, duringSleepFragment, "DuringSleepFragment").
+                        replace(R.id.fragmentContainer, duringSleepFragment,DuringSleepFragment.Tag).
                         addToBackStack(null).commit();
                 //start sleep mode
 

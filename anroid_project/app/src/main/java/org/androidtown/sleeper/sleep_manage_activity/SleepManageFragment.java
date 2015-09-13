@@ -47,7 +47,7 @@ public class SleepManageFragment extends Fragment implements View.OnClickListene
         automodeFragment=new AutoModeFragment() ;
 
         getChildFragmentManager().beginTransaction().replace(R.id.flayoutMode,
-                automodeFragment,autoModeFragmentTag).commit() ;
+                automodeFragment,AutoModeFragment.Tag).commit() ;
 
         //add register buttons and their listener
         //Button btnSelectAutoMode=(Button)rootView.findViewById(R.id.btnSelectAutoMode) ;

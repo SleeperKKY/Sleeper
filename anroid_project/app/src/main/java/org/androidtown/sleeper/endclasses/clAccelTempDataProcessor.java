@@ -327,123 +327,6 @@ public class clAccelTempDataProcessor extends clDataProcessor implements clDataP
 		}
 	}
 
-	/*
-	public clStatManagerAlpha createStatManager() {
-
-		clStatManagerAlpha statManager=new clStatManagerAlpha() ;
-
-		//insert data into statmanager
-		statManager.setHorizontalAxisName("Time");
-		statManager.setVerticalAxisName("Sleep Level");
-
-		//retrieve data from database
-		String[] colNames={clMyDatabaseManager.colTime, clMyDatabaseManager.colSleepLevel, clMyDatabaseManager.colTemp} ;
-		Cursor myCursor=myDatabase.selectTable(clMyDatabaseManager.dataTable+Integer.toString(rowPos), colNames, null, null) ;
-
-		DataPoint[] sleepLevelSeries=new DataPoint[myCursor.getCount()] ;
-		DataPoint[] tempSeries=new DataPoint[myCursor.getCount()] ;
-
-		SimpleDateFormat transFormat = new SimpleDateFormat("HH:mm:ss");
-		long time ;
-		double sleepLevelVal ;
-		double tempVal ;
-		Date to=null ;
-
-		int dataPointsIndex=0 ;
-		//search queries
-		while(myCursor.moveToNext()) {
-
-			//get time, temperature, sleep level
-			time=myCursor.getLong(0);
-			sleepLevelVal=myCursor.getDouble(1);
-			tempVal=myCursor.getDouble(2) ;
-
-			to=new Date(time) ;
-
-			sleepLevelSeries[dataPointsIndex]=new DataPoint(to,sleepLevelVal) ;
-			tempSeries[dataPointsIndex]=new DataPoint(to,tempVal) ;
-			dataPointsIndex++ ;
-		}
-
-		//make graph
-		statManager.addData(clStatManagerAlpha.FIRST,"Sleep Level", sleepLevelSeries) ;
-		statManager.addData(clStatManagerAlpha.SECOND,"Temp", tempSeries) ;
-
-		//set additional information
-		statManager.setHorizontalAxisFormatString("%tT");
-		statManager.setToCalcAvgData(clStatManagerAlpha.FIRST,0);
-
-		return statManager ;
-	}
-*/
-
-	/*
-	@Override
-	public clStatManager createStatManager(int rowPos) {
-
-		clStatManager statManager=new clStatManager() ;
-
-		//retrieve data from database
-		String[] colNames={clMyDatabaseManager.colTime, clMyDatabaseManager.colSleepLevel, clMyDatabaseManager.colTemp} ;
-		Cursor myCursor=myDatabase.selectTable(clMyDatabaseManager.dataTable, colNames, null, null) ;
-
-		DataPoint[] sleepLevelData=new DataPoint[myCursor.getCount()] ;
-		DataPoint[] tempData=new DataPoint[myCursor.getCount()] ;
-
-		SimpleDateFormat transFormat = new SimpleDateFormat("HH:mm");
-		long time ;
-		int sleepLevelVal ;
-		double tempVal ;
-		Date to ;
-
-		int dataPointsIndex=0 ;
-		//search queries
-		while(myCursor.moveToNext()) {
-
-			//get time, temperature, sleep level
-			time=myCursor.getLong(0) ;
-			sleepLevelVal=myCursor.getInt(1);
-			tempVal=myCursor.getDouble(2) ;
-
-			to=new Date(time) ;
-
-			Log.i(toString(),to.toString()) ;
-
-			sleepLevelData[dataPointsIndex]=new DataPoint(to,sleepLevelVal) ;
-			tempData[dataPointsIndex]=new DataPoint(to,tempVal) ;
-			dataPointsIndex++ ;
-		}
-
-		//make graph
-
-		GraphView graph=new GraphView(AttachedContext) ;
-
-		LineGraphSeries<DataPoint> tempSeries=new LineGraphSeries(sleepLevelData) ;
-		BarGraphSeries<DataPoint> sleepLevelSeries=new BarGraphSeries(tempData) ;
-
-		// set date label formatter
-		graph.getGridLabelRenderer().setLabelFormatter(new DateAsXAxisLabelFormatter(AttachedContext,
-				DateFormat.getTimeInstance()));
-		//set additional information
-		graph.getGridLabelRenderer().setNumHorizontalLabels(4); // only 4 because of the space
-		graph.getGridLabelRenderer().setHorizontalAxisTitle("Time");
-		graph.getGridLabelRenderer().setVerticalAxisTitle("Movement Level");
-
-		graph.addSeries(sleepLevelSeries);
-		graph.getSecondScale().addSeries(tempSeries) ;
-
-		statManager.addGraph(graph) ;
-
-		//add static data to be shown
-		statManager.addStaticData("Sleep Time: ",
-				transFormat.format(new Date((long)sleepLevelData[0].getX())));
-		statManager.addStaticData("Wake Time: ",
-				transFormat.format(new Date((long)sleepLevelData[sleepLevelData.length-1].getX()))) ;
-
-		return statManager ;
-	}
-*/
-
     /**
      * Create statmanager at given row when click in StatisticManage Fragment
      * @param rowPos row position of clicked item in listview
@@ -473,9 +356,9 @@ public class clAccelTempDataProcessor extends clDataProcessor implements clDataP
 		while(myCursor.moveToNext()) {
 
 			//get time, temperature, sleep level
-			time=myCursor.getLong(0) ;
-			sleepLevelVal=myCursor.getInt(1);
-			tempVal=myCursor.getDouble(2) ;
+			time=myCursor.getLong(myCursor.getColumnIndex(clMyDatabaseManager.colTime)) ;
+			sleepLevelVal=myCursor.getInt(myCursor.getColumnIndex(clMyDatabaseManager.colSleepLevel));
+			tempVal=myCursor.getDouble(myCursor.getColumnIndex(clMyDatabaseManager.colTemp)) ;
 
 			to=new Date(time) ;
 
@@ -515,7 +398,7 @@ public class clAccelTempDataProcessor extends clDataProcessor implements clDataP
 		});
 
 		//set additional information
-		graph.getGridLabelRenderer().setNumHorizontalLabels(6); // only 4 because of the space
+		graph.getGridLabelRenderer().setNumHorizontalLabels(5); // only 6 because of the space
 		graph.getGridLabelRenderer().setNumVerticalLabels(3);
 		graph.getGridLabelRenderer().setHorizontalAxisTitle("Time");
 		graph.getGridLabelRenderer().setVerticalAxisTitle("Sleep Level");

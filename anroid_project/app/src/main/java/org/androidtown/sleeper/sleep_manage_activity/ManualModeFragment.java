@@ -11,6 +11,7 @@ import org.androidtown.sleeper.R;
 /**
  * Created by Administrator on 2015-07-28.
  */
+@Deprecated
 public class ManualModeFragment extends Fragment {
 
     @Override

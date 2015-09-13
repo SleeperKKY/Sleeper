@@ -34,6 +34,8 @@ public class DuringSleepFragment extends Fragment {
     private static final String status_sleeping="Sleeping..." ;
     private static final String status_wakeup="Wake up!!" ;
 
+    public static final String Tag="DuringSleepFragment" ;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
