@@ -9238,7 +9238,7 @@
 </XPD:OBJ>
 </XPD:OBJ>
 </XPD:OBJ>
-<XPD:ATTR name="#OwnedElements" type="integer">59</XPD:ATTR>
+<XPD:ATTR name="#OwnedElements" type="integer">58</XPD:ATTR>
 <XPD:OBJ name="OwnedElements[0]" type="UMLAssociation" guid="zClCR/TNU0K+bA4PQrdzlQAA">
 <XPD:REF name="Namespace">qqRi2Tx1mEaZRI4EhFpdlAAA</XPD:REF>
 <XPD:ATTR name="#Views" type="integer">4</XPD:ATTR>
@@ -10542,6 +10542,66 @@
 <XPD:REF name="Views[3]">Y0xNi4xOaEm3ACBgQKpvpwAA</XPD:REF>
 <XPD:ATTR name="#Generalizations" type="integer">1</XPD:ATTR>
 <XPD:REF name="Generalizations[0]">1Y0tgOX86ES6lXf8ygs1qwAA</XPD:REF>
+<XPD:ATTR name="#OwnedElements" type="integer">1</XPD:ATTR>
+<XPD:OBJ name="OwnedElements[0]" type="UMLInterface" guid="UITRvop9A0WAk47TMPEIhgAA">
+<XPD:ATTR name="Name" type="string">IDbChangeListener</XPD:ATTR>
+<XPD:REF name="Namespace">MgsTnBdB2kGIKbiYM2jpqQAA</XPD:REF>
+<XPD:ATTR name="#Views" type="integer">3</XPD:ATTR>
+<XPD:REF name="Views[0]">FIFGFDXEwUG/gGpieqxzWwAA</XPD:REF>
+<XPD:REF name="Views[1]">z+58qSLz8UyWCc5Cr44PSwAA</XPD:REF>
+<XPD:REF name="Views[2]">TlITMpbvo0yyqwoTP3c0FQAA</XPD:REF>
+<XPD:ATTR name="#SupplierDependencies" type="integer">1</XPD:ATTR>
+<XPD:REF name="SupplierDependencies[0]">4t70B3fkekmRpdhMoXJU3wAA</XPD:REF>
+<XPD:ATTR name="#Operations" type="integer">3</XPD:ATTR>
+<XPD:OBJ name="Operations[0]" type="UMLOperation" guid="/52iTMeA20i+8s5qg8hNgQAA">
+<XPD:ATTR name="Name" type="string">onInsertSummaryTable</XPD:ATTR>
+<XPD:REF name="Owner">UITRvop9A0WAk47TMPEIhgAA</XPD:REF>
+<XPD:ATTR name="#Parameters" type="integer">2</XPD:ATTR>
+<XPD:OBJ name="Parameters[0]" type="UMLParameter" guid="EuA9JZ1yBkSpAkzeKLSiqQAA">
+<XPD:ATTR name="Name" type="string">rowId</XPD:ATTR>
+<XPD:ATTR name="TypeExpression" type="string">int</XPD:ATTR>
+<XPD:REF name="BehavioralFeature">/52iTMeA20i+8s5qg8hNgQAA</XPD:REF>
+</XPD:OBJ>
+<XPD:OBJ name="Parameters[1]" type="UMLParameter" guid="NgugQYbfO0mVq/APwVfPdwAA">
+<XPD:ATTR name="Name" type="string">db</XPD:ATTR>
+<XPD:ATTR name="TypeExpression" type="string">SQLiteDatabase</XPD:ATTR>
+<XPD:REF name="BehavioralFeature">/52iTMeA20i+8s5qg8hNgQAA</XPD:REF>
+</XPD:OBJ>
+</XPD:OBJ>
+<XPD:OBJ name="Operations[1]" type="UMLOperation" guid="DvZtSmAVSU2CmMLvFz5IVQAA">
+<XPD:ATTR name="Name" type="string">onDeleteSummaryTableAll</XPD:ATTR>
+<XPD:REF name="Owner">UITRvop9A0WAk47TMPEIhgAA</XPD:REF>
+<XPD:ATTR name="#Parameters" type="integer">2</XPD:ATTR>
+<XPD:OBJ name="Parameters[0]" type="UMLParameter" guid="HviJpTijUkOokIzfAtD+SwAA">
+<XPD:ATTR name="Name" type="string">rowId</XPD:ATTR>
+<XPD:ATTR name="TypeExpression" type="string">int</XPD:ATTR>
+<XPD:REF name="BehavioralFeature">DvZtSmAVSU2CmMLvFz5IVQAA</XPD:REF>
+</XPD:OBJ>
+<XPD:OBJ name="Parameters[1]" type="UMLParameter" guid="4kjFen10BEmXf/0JrRYqwAAA">
+<XPD:ATTR name="Name" type="string">db</XPD:ATTR>
+<XPD:ATTR name="TypeExpression" type="string">SQLiteDatabase</XPD:ATTR>
+<XPD:REF name="BehavioralFeature">DvZtSmAVSU2CmMLvFz5IVQAA</XPD:REF>
+</XPD:OBJ>
+</XPD:OBJ>
+<XPD:OBJ name="Operations[2]" type="UMLOperation" guid="0I2ZGQymzkWUXXyFLYh6qAAA">
+<XPD:ATTR name="Name" type="string">setDB</XPD:ATTR>
+<XPD:REF name="Owner">UITRvop9A0WAk47TMPEIhgAA</XPD:REF>
+<XPD:ATTR name="#Parameters" type="integer">1</XPD:ATTR>
+<XPD:OBJ name="Parameters[0]" type="UMLParameter" guid="VHE5W5MzbUOvDoetsRXopgAA">
+<XPD:ATTR name="Name" type="string">db</XPD:ATTR>
+<XPD:ATTR name="TypeExpression" type="string">SQLiteOpenHelper</XPD:ATTR>
+<XPD:REF name="BehavioralFeature">0I2ZGQymzkWUXXyFLYh6qAAA</XPD:REF>
+<XPD:REF name="Type_">Te+1l36SbkOp8X6Hgm/jIwAA</XPD:REF>
+</XPD:OBJ>
+</XPD:OBJ>
+<XPD:ATTR name="#TypedParameters" type="integer">4</XPD:ATTR>
+<XPD:REF name="TypedParameters[0]" pathname="listener">eyiDvhLwik2+57vX5OkFJAAA</XPD:REF>
+<XPD:REF name="TypedParameters[1]" pathname="listener">W8IaEjvf0EOnjkxYCm34hAAA</XPD:REF>
+<XPD:REF name="TypedParameters[2]">AqjiQWnFGkWVFY46zC7ZkgAA</XPD:REF>
+<XPD:REF name="TypedParameters[3]">O5H+cJNbn0yeFqqjbk0SmwAA</XPD:REF>
+<XPD:ATTR name="#Associations" type="integer">1</XPD:ATTR>
+<XPD:REF name="Associations[0]">iRNfxGw2EU+5eetlvKUtxwAA</XPD:REF>
+</XPD:OBJ>
 <XPD:ATTR name="#Operations" type="integer">13</XPD:ATTR>
 <XPD:OBJ name="Operations[0]" type="UMLOperation" guid="nyXcTctODU+o1thChehq3AAA">
 <XPD:ATTR name="Name" type="string">clDatabase</XPD:ATTR>
@@ -13207,66 +13267,7 @@ For example, if low-pass-filter threshold was 2.5Hz then it will have 0.1~2.4Hz 
 <XPD:REF name="Views[3]">W0AAXZyNCkmLhPl1pNpSCwAA</XPD:REF>
 </XPD:OBJ>
 </XPD:OBJ>
-<XPD:OBJ name="OwnedElements[56]" type="UMLInterface" guid="UITRvop9A0WAk47TMPEIhgAA">
-<XPD:ATTR name="Name" type="string">IDbChangeListener</XPD:ATTR>
-<XPD:REF name="Namespace">qqRi2Tx1mEaZRI4EhFpdlAAA</XPD:REF>
-<XPD:ATTR name="#Views" type="integer">3</XPD:ATTR>
-<XPD:REF name="Views[0]">FIFGFDXEwUG/gGpieqxzWwAA</XPD:REF>
-<XPD:REF name="Views[1]">z+58qSLz8UyWCc5Cr44PSwAA</XPD:REF>
-<XPD:REF name="Views[2]">TlITMpbvo0yyqwoTP3c0FQAA</XPD:REF>
-<XPD:ATTR name="#SupplierDependencies" type="integer">1</XPD:ATTR>
-<XPD:REF name="SupplierDependencies[0]">4t70B3fkekmRpdhMoXJU3wAA</XPD:REF>
-<XPD:ATTR name="#Operations" type="integer">3</XPD:ATTR>
-<XPD:OBJ name="Operations[0]" type="UMLOperation" guid="/52iTMeA20i+8s5qg8hNgQAA">
-<XPD:ATTR name="Name" type="string">onInsertSummaryTable</XPD:ATTR>
-<XPD:REF name="Owner">UITRvop9A0WAk47TMPEIhgAA</XPD:REF>
-<XPD:ATTR name="#Parameters" type="integer">2</XPD:ATTR>
-<XPD:OBJ name="Parameters[0]" type="UMLParameter" guid="EuA9JZ1yBkSpAkzeKLSiqQAA">
-<XPD:ATTR name="Name" type="string">rowId</XPD:ATTR>
-<XPD:ATTR name="TypeExpression" type="string">int</XPD:ATTR>
-<XPD:REF name="BehavioralFeature">/52iTMeA20i+8s5qg8hNgQAA</XPD:REF>
-</XPD:OBJ>
-<XPD:OBJ name="Parameters[1]" type="UMLParameter" guid="NgugQYbfO0mVq/APwVfPdwAA">
-<XPD:ATTR name="Name" type="string">db</XPD:ATTR>
-<XPD:ATTR name="TypeExpression" type="string">SQLiteDatabase</XPD:ATTR>
-<XPD:REF name="BehavioralFeature">/52iTMeA20i+8s5qg8hNgQAA</XPD:REF>
-</XPD:OBJ>
-</XPD:OBJ>
-<XPD:OBJ name="Operations[1]" type="UMLOperation" guid="DvZtSmAVSU2CmMLvFz5IVQAA">
-<XPD:ATTR name="Name" type="string">onDeleteSummaryTableAll</XPD:ATTR>
-<XPD:REF name="Owner">UITRvop9A0WAk47TMPEIhgAA</XPD:REF>
-<XPD:ATTR name="#Parameters" type="integer">2</XPD:ATTR>
-<XPD:OBJ name="Parameters[0]" type="UMLParameter" guid="HviJpTijUkOokIzfAtD+SwAA">
-<XPD:ATTR name="Name" type="string">rowId</XPD:ATTR>
-<XPD:ATTR name="TypeExpression" type="string">int</XPD:ATTR>
-<XPD:REF name="BehavioralFeature">DvZtSmAVSU2CmMLvFz5IVQAA</XPD:REF>
-</XPD:OBJ>
-<XPD:OBJ name="Parameters[1]" type="UMLParameter" guid="4kjFen10BEmXf/0JrRYqwAAA">
-<XPD:ATTR name="Name" type="string">db</XPD:ATTR>
-<XPD:ATTR name="TypeExpression" type="string">SQLiteDatabase</XPD:ATTR>
-<XPD:REF name="BehavioralFeature">DvZtSmAVSU2CmMLvFz5IVQAA</XPD:REF>
-</XPD:OBJ>
-</XPD:OBJ>
-<XPD:OBJ name="Operations[2]" type="UMLOperation" guid="0I2ZGQymzkWUXXyFLYh6qAAA">
-<XPD:ATTR name="Name" type="string">setDB</XPD:ATTR>
-<XPD:REF name="Owner">UITRvop9A0WAk47TMPEIhgAA</XPD:REF>
-<XPD:ATTR name="#Parameters" type="integer">1</XPD:ATTR>
-<XPD:OBJ name="Parameters[0]" type="UMLParameter" guid="VHE5W5MzbUOvDoetsRXopgAA">
-<XPD:ATTR name="Name" type="string">db</XPD:ATTR>
-<XPD:ATTR name="TypeExpression" type="string">SQLiteOpenHelper</XPD:ATTR>
-<XPD:REF name="BehavioralFeature">0I2ZGQymzkWUXXyFLYh6qAAA</XPD:REF>
-<XPD:REF name="Type_">Te+1l36SbkOp8X6Hgm/jIwAA</XPD:REF>
-</XPD:OBJ>
-</XPD:OBJ>
-<XPD:ATTR name="#TypedParameters" type="integer">4</XPD:ATTR>
-<XPD:REF name="TypedParameters[0]" pathname="listener">eyiDvhLwik2+57vX5OkFJAAA</XPD:REF>
-<XPD:REF name="TypedParameters[1]" pathname="listener">W8IaEjvf0EOnjkxYCm34hAAA</XPD:REF>
-<XPD:REF name="TypedParameters[2]">AqjiQWnFGkWVFY46zC7ZkgAA</XPD:REF>
-<XPD:REF name="TypedParameters[3]">O5H+cJNbn0yeFqqjbk0SmwAA</XPD:REF>
-<XPD:ATTR name="#Associations" type="integer">1</XPD:ATTR>
-<XPD:REF name="Associations[0]">iRNfxGw2EU+5eetlvKUtxwAA</XPD:REF>
-</XPD:OBJ>
-<XPD:OBJ name="OwnedElements[57]" type="UMLRealization" guid="4t70B3fkekmRpdhMoXJU3wAA">
+<XPD:OBJ name="OwnedElements[56]" type="UMLRealization" guid="4t70B3fkekmRpdhMoXJU3wAA">
 <XPD:ATTR name="StereotypeProfile" type="string">UMLStandard</XPD:ATTR>
 <XPD:ATTR name="StereotypeName" type="string">realize</XPD:ATTR>
 <XPD:REF name="Namespace">qqRi2Tx1mEaZRI4EhFpdlAAA</XPD:REF>
@@ -13278,7 +13279,7 @@ For example, if low-pass-filter threshold was 2.5Hz then it will have 0.1~2.4Hz 
 <XPD:REF name="Views[2]">IbnDrPXPPk6qc65N6LxSnQAA</XPD:REF>
 <XPD:REF name="Views[3]">mJkrLUr7fEWbkJ6Yk/WUogAA</XPD:REF>
 </XPD:OBJ>
-<XPD:OBJ name="OwnedElements[58]" type="UMLAssociation" guid="rS0h/nmUR0+AlIpv2gDufQAA">
+<XPD:OBJ name="OwnedElements[57]" type="UMLAssociation" guid="rS0h/nmUR0+AlIpv2gDufQAA">
 <XPD:REF name="Namespace">qqRi2Tx1mEaZRI4EhFpdlAAA</XPD:REF>
 <XPD:ATTR name="#Views" type="integer">4</XPD:ATTR>
 <XPD:REF name="Views[0]">28F/2rtRyUCSFEisTgxzvQAA</XPD:REF>
