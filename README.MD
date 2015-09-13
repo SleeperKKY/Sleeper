@@ -7,7 +7,7 @@ sleep quality. Some users might want app to improve their sleep quality too. So 
 quality using sleep stage. Then we got to the idea, in which we build an app that not only tracks sleep stage but also control
 remote device, like in summer fan, air conditional, or in winter heater, via wifi. We also thought that it should be opensource so
 developer can make and modify our app much better than now since this is our first android app ever made. So we'd like to get
-advice to design of classes, other feature to add or even harsh feedback!!.*
+advice to design of classes, other feature to add or even harsh feedback!!*
 
 
 ##Application
@@ -15,6 +15,15 @@ advice to design of classes, other feature to add or even harsh feedback!!.*
 We separated library package, 'propclasses', and user implementation package, currently 'endclasses'. Propclasses consist
 of 'app_manager' package, 'communition_manager', 'dataprocessor_manager'. In order to use app, you have to put '**SvmFile**'
 folder above in your android phone's sd card. Just put it, then it is done.
+
+In order to use propclasses package, you have to add user permission below:
+
+ *<uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>*
+ *<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>*
+ *<uses-permission android:name="android.permission.INTERNET"/>*
+ *<uses-permission android:name="android.permission.WAKE_LOCK"/>*
+ *<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>*
+ *<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>*
 
 ###app_manager
 App_manager package is head part that does control trivial things other than tracking sleep tracking like broadcasting alarm intent, get wakelock, or other sort of thing.
@@ -41,7 +50,7 @@ interface so if developer want to store data of each tracking then implement thi
         void onDeleteSummaryTable(int rowId) ;
 
 
-*Mechanism is like, when tracking starts, **clDataprocessor** inserts new row with row id and other columns. Then if you implemented and registered that interface on clDatabaseManager,
+Mechanism is like, when tracking starts, **clDataprocessor** inserts new row with row id and other columns. Then if you implemented and registered that interface on clDatabaseManager,
 it will call **onInsertSummaryTable**. In this method, you should create new table of your own with rowId to store your sleep data. For example, if you have table with name "dataTable" and
 row id is '2' when onInsertSummaryTable is called, then you actually have to create "dataTable2", "your_table_name"+"inserted_row_id_in_dataSummary_table" so that your table can sync with
 dataSummary table's each row. **onDeleteSummaryTable** works similar, but you currently, you have to just drop your table. The example of this approach is in **endclasses** folder.
