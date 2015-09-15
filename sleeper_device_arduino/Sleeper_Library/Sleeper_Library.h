@@ -1,6 +1,5 @@
 #include <Arduino.h>  // 아두이노 관련 메서드 처리를 위해 '슬리퍼' 라이브러리에 포함시킵니다.
 
-
 #define fan_Pin 3  // 아두이노가 선풍기를 조작하는 핀 넘버를 설정합니다.
 
 #define REQ 0x00  // 메시지에 관련된 전처리 상수를 설정합니다.
@@ -26,11 +25,11 @@ class MSG_Analyzer  // 아두이노가 수신한 15바이트 수신 메시지를
 {                   // 아두이노와 연결된 모듈의 처리를 중첩 클래스로 처리하는 구조입니다.
 private:
     int deviceID = 0;
-    char worked_MSG[30];
+    char toSend_MSG[30];
 
 public:
     MSG_Analyzer();
-    void analize_MSG(char MSG[]);
+    char* analize_MSG(char MSG[]);
 
 
 
@@ -41,10 +40,11 @@ public:
         char command = 0;
         char Returning_MSG[30];
 
-	private:
-        void MSG_DIVISION(char MSG[]);
+    public:
+        char* MSG_DIVISION(char MSG[]);
+        //void MSG_DIVISION(char MSG[]);
         char get_Command(char MSG[]);
-        void response_MSG(char MSG[]);
+        char* response_MSG(char MSG[]);
         char get_Temperature();
     };
 
@@ -56,10 +56,10 @@ public:
         char command = 0;
         char Returning_MSG[30];
 		
-	private:
+    public:
 		char get_Command(char MSG[]);
-		void MSG_DIVISION(char MSG[]);     
-        void response_MSG(char MSG[]);
+        char* MSG_DIVISION(char MSG[]);
+        char* response_MSG(char MSG[]);
         void pwm_Set(char pwm);
     };
 
