@@ -9,6 +9,9 @@ remote device, like in summer fan, air conditional, or in winter heater, via wif
 developer can make and modify our app much better than now since this is our first android app ever made. So we'd like to get
 advice to design of classes, other feature to add or even harsh feedback!!*
 
+##System Overview
+![System Overview](./README_IMG/SystemOverview.jpg)
+
 
 ##Application
 

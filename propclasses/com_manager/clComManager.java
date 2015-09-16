@@ -12,6 +12,8 @@
 package org.androidtown.sleeper.propclasses.com_manager;
 
 
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 
 import org.androidtown.sleeper.endclasses.clFanMessageConverter;
@@ -186,6 +188,7 @@ public class clComManager{
     private class clComManagerThreadTask implements Runnable{
 
         //code for testing message translating, do not erase
+
         @Override
         public void run() {
 
@@ -263,7 +266,7 @@ public class clComManager{
             try {
                 //initialize socket
                 devSocket = new Socket(ipAddr, port);
-                devSocket.setSoTimeout(TIMEOUT_UNIT);
+                devSocket.setSoTimeout(timeout_unit);
 
                 //tempStartFlag =true ;
 
@@ -312,7 +315,7 @@ public class clComManager{
                     //if timeout count has exceeded maximum count or
                     //response message is received
 
-                    while (timeoutCnt != TIMEOUT_COUNT) {
+                    while (timeoutCnt != timeout_count) {
 
                         try {
 
