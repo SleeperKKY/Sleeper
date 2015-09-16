@@ -1,13 +1,15 @@
 #Sleeper
 
+##Summary
 
 *There are many sleep tracking apps in android market, and wearable gadgets on the market. They track your sleep stage during
 your sleep and gives analysis of how you slept well. But that's all. They don't offer you some treatment to improve your
 sleep quality. Some users might want app to improve their sleep quality too. So we thought about how to improve users sleep
 quality using sleep stage. Then we got to the idea, in which we build an app that not only tracks sleep stage but also control
-remote device, like in summer fan, air conditional, or in winter heater, via wifi. We also thought that it should be opensource so
-developer can make and modify our app much better than now since this is our first android app ever made. So we'd like to get
-advice to design of classes, other feature to add or even harsh feedback!!*
+remote device, like in summer fan, air conditional, or in winter heater, via wifi. The key feature of our project is that we made
+library called "Sleeper", which does sleep classification and give classified sleep stage so that developer can only think about 
+device controlling mechanism. We also thought that it should be opensource sodeveloper can make and modify our app much better than
+now since this is our first android app ever made. So we'd like to get advice to design of classes, other feature to add or even harsh feedback!!*
 
 ##System Overview
 ![System Overview](./README_IMG/SystemOverview.jpg)
@@ -15,23 +17,25 @@ advice to design of classes, other feature to add or even harsh feedback!!*
 
 ##Application
 
-We separated library package, 'propclasses', and user implementation package, currently 'endclasses'. Propclasses consist
+We separated library package, 'propclasses', and user implementation sample package, currently 'endclasses'. Propclasses consist
 of 'app_manager' package, 'communition_manager', 'dataprocessor_manager'. In order to use app, you have to put '**SvmFile**'
 folder above in your android phone's sd card. Just put it, then it is done.
 
+###1.propclasses package
+
 In order to use propclasses package, you have to add user permission below:
 
- *<uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>*
- *<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>*
- *<uses-permission android:name="android.permission.INTERNET"/>*
- *<uses-permission android:name="android.permission.WAKE_LOCK"/>*
- *<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>*
- *<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>*
+ "android.permission.ACCESS_WIFI_STATE"
+ "android.permission.ACCESS_NETWORK_STATE"
+ "android.permission.INTERNET"
+ "android.permission.WAKE_LOCK"
+ "android.permission.READ_EXTERNAL_STORAGE"
+ "android.permission.WRITE_EXTERNAL_STORAGE"
 
-###app_manager
+####1.1 app_manager
 App_manager package is head part that does control trivial things other than tracking sleep tracking like broadcasting alarm intent, get wakelock, or other sort of thing.
 
-###dataprocessor_manager 
+####1.2 dataprocessor_manager 
 Dataprocessor_manager package is where actual tracking of sleep is taking place. It consists of **clDataprocessor**, **clDataprocessor.clSleepStageClassifier**,
 **clDataProcessor.clDatabaseManager**, **clDataTimer**.
 
@@ -59,7 +63,7 @@ row id is '2' when onInsertSummaryTable is called, then you actually have to cre
 dataSummary table's each row. **onDeleteSummaryTable** works similar, but you currently, you have to just drop your table. The example of this approach is in **endclasses** folder.
 
 
-###communication_manager
+####1.3 communication_manager
 Communication manager package enable you to communicate with remote device via wifi. It consists of **clComManager**, **clMessage**, **clDeviceMessageConverter**, **clRequestMessage**, **clResponseMessage**.
 Actual transfer of message between remote device and app takes place in **clComManager**. Developer have to implement **clComManager.IMessageListener** to listen response message arriving event.
 Currently, only app sends "request message" and remote device only sends "response message" back. And it disconnects automatically after receiving response message. We assumed that there will be more than
@@ -72,9 +76,26 @@ Request: make device message by clDeviceMessageConverter -> put device message i
 Response: (clComManager)message arrived remote device -> (clComManager)make response message and call onReceiveMessageEvent -> get response message -> check what device message by identifying device id
 		  -> get data and do something with that data.
 		  
-(clComManager) means it is done by clComManager. So request is simply device message -> message -> send and response is message -> device message. Simple isn't it? There's also example in "endclasses".
+(clComManager) means job is done by clComManager. So request is simply device message -> message -> send and response is message -> device message. Simple isn't it? There's also example in "endclasses".
 Look around **clAccelTempListener** to see how **IMessageListener**'s onReceiveMessage is implemented. 
 
+###2. endclasses
+
+endclasses package is where user implementation of device controlling mechanism is placed. It consists of **clAccelTempListener**, **clFanMessageConverter**, **clTempMessageConverter**,
+**clMyDatabaseManager**. **clAccelTempListener** extended **clDataProcessor** and implemented its own device controlling mechanism. It works like below:
+
+	(1) register to sleep stage classifier
+	(2) start measure
+	(3) get classified sleep stage at certain time
+	(4) analyse sleep stage change between previous and current sleep stage
+	(5) decide command
+	(6) send command message to remote controlling device
+	(7) repeat (2) ~ (6) until measure stopped
+
+As we said on **Summary**, the only thing developers have to think is device controlling mechanism using classified sleep stage to improve sleep quality of user.
+**clFanMessageConverter** and **clTempMessageConverter** are device specific message converter. You can make device message using these classes and wrap them in
+**clRequestMessage** class and send. **clMyDatabaseManager** implements **IDbChangeListener** interface of **clDataProcessor.clDatabaseManager** class. You can all
+usage in endclasses package folder above and in project file.
 
 ##Remote device
 We used **arduino** and **esp8266** wifi module to control with wifi. Details are explained in **SleeperDevice** branch.
