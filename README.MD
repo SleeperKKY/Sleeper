@@ -21,6 +21,8 @@ We separated library package, 'propclasses', and user implementation sample pack
 of 'app_manager' package, 'communition_manager', 'dataprocessor_manager'. In order to use app, you have to put '**SvmFile**'
 folder above in your android phone's sd card. Just put it, then it is done.
 
+You can visit 'propclasses' package's javadoc in this link:[link]http://sleeperkky.github.io/Sleeper
+
 ###1.propclasses package
 
 In order to use propclasses package, you have to add user permission below:
