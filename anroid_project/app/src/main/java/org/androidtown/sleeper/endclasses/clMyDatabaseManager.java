@@ -5,7 +5,7 @@ package org.androidtown.sleeper.endclasses;//
 //  @ Project : Sleeper
 //  @ File Name : clMyDatabase.java
 //  @ Date : 2015-08-13
-//  @ Author : Kang Shin Wook
+//  @ Author : Kang Shin Wook, Kim Hyun Woong
 //
 //
 
@@ -32,7 +32,7 @@ public class clMyDatabaseManager implements clDataProcessor.clDatabaseManager.ID
 
 	public static final String colSleepLevel ="SleepLevel";
 
-	public static final String viewEmps="ViewEmps";
+	//public static final String viewEmps="ViewEmps";
 
 	private SQLiteOpenHelper parentDBHelper=null ;
 

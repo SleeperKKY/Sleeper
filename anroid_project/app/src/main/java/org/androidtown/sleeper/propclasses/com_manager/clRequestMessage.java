@@ -7,7 +7,7 @@ package org.androidtown.sleeper.propclasses.com_manager;
 //  @ Project : Sleeper
 //  @ File Name : clRequestMessage
 //  @ Date : 2015-09-06
-//  @ Author : Kang Shin Wook, Kim Hyun Woong, Lim Hyun Woo
+//  @ Author : Kang Shin Wook
 //  @ Email : rkdtlsdnr102@naver.com
 
 

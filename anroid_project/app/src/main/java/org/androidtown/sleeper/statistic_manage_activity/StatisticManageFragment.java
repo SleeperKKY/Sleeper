@@ -1,43 +1,29 @@
 package org.androidtown.sleeper.statistic_manage_activity;
 
-import android.graphics.Color;
-import android.hardware.camera2.params.BlackLevelPattern;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearLayoutCompat;
-import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.FrameLayout;
-import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.jjoe64.graphview.GraphView;
-import com.jjoe64.graphview.LegendRenderer;
-import com.jjoe64.graphview.helper.DateAsXAxisLabelFormatter;
 import com.jjoe64.graphview.series.DataPoint;
-import com.jjoe64.graphview.series.LineGraphSeries;
 import com.jjoe64.graphview.series.Series;
 
 import org.androidtown.sleeper.MainActivity;
 import org.androidtown.sleeper.R;
 import org.androidtown.sleeper.propclasses.dataprocessor_manager.clStatManager;
-import org.androidtown.sleeper.propclasses.dataprocessor_manager.clStatManagerAlpha;
 
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Formatter;
 import java.util.List;
 
 /**
@@ -61,6 +47,7 @@ public class StatisticManageFragment extends Fragment{
     private TextView timeDataTextView;
     private TextView[] variableDataNameTextSeries1;
     private TextView[] variableDataNameTextSeries2;
+    private RadioButton checkedRadioButton=null ;
 
     public static final String Tag="StatisticManageFragment" ;
 
@@ -68,7 +55,7 @@ public class StatisticManageFragment extends Fragment{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        rootView=inflater.inflate(R.layout.layout_statistic_manage,container,false) ;
+        rootView=inflater.inflate(R.layout.layout_statistic_manage, container, false) ;
 
         //Log.i(toString(), "On Create View called") ;
 
@@ -81,11 +68,12 @@ public class StatisticManageFragment extends Fragment{
 
     private void InitDisplay() {
 
+        //get main activity for context
         mainActivity = (MainActivity) getActivity();
 
-        graphList=statManager.getGraphList() ;
-        dataNameList=statManager.getStaticDataNameList();
-        dataList = statManager.getStaticDataList();
+        graphList=statManager.getGraphList() ;//get stored list of graph
+        dataNameList=statManager.getStaticDataNameList();//get list of static data name
+        dataList = statManager.getStaticDataList();//get list of static data
 
 
         ViewGroup graphRadioGroup = (ViewGroup) rootView.findViewById(R.id.radioGroup);
@@ -94,20 +82,24 @@ public class StatisticManageFragment extends Fragment{
 
         for (int i = 0; i <graphList.size(); i++) {
 
-            Log.i("graph", Integer.toString(i)) ;
+            //Log.i("graph", Integer.toString(i)) ;
+            //create radio button per graph in graph list
             RadioButton button = new RadioButton(mainActivity.getApplicationContext());
-            button.setId(i);
+            button.setId(i);//set button id as index of graph's list
             button.setText(graphList.get(i).getTitle());
             button.setTextColor(0xFF909090);
-            button.setChecked(i == 0);
-            graphRadioGroup.addView(button);
+            button.setChecked(i == 0);//check first radio button as default
+            graphRadioGroup.addView(button);//add button on radio button group
+
+            //register each radio button to show different graph
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
 
-                    frameLayout.removeAllViews();
-                    tableLayout.removeAllViews();
+                    frameLayout.removeAllViews();//clear frame where previous graph is drawn
+                    tableLayout.removeAllViews();//clear table layout where feature of graph is written
                     ((RadioGroup) view.getParent()).check(view.getId());
+                    checkedRadioButton=(RadioButton)view ;//get reference to check radio button
                     int v = view.getId();
                     graph = graphList.get(v);
 
@@ -119,15 +111,17 @@ public class StatisticManageFragment extends Fragment{
                     graph.getSecondScale().setMaxY(35);
 
                     graph.onDataChanged(false, false);
-                    graph.getViewport().setScrollable(true);
+                    graph.getViewport().setScrollable(false);
                     //graph.getViewport().setScalable(true);
 
                     TextView[] dataNameText = new TextView[dataNameList.size()];
                     TextView[] dataText = new TextView[dataList.size()];
 
+                    //add graph on frame layout
                     frameLayout.addView(graph);
 
 
+                    //add graph's features in tableLayout
                     for (int i = 0; i < dataNameList.size(); i++) {
                         TableRow tableRow = new TableRow(mainActivity.getApplicationContext());
 
@@ -217,29 +211,49 @@ public class StatisticManageFragment extends Fragment{
                         @Override
                         public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
 
-                            Series<DataPoint> series = graphList.get(0).getSeries().get(0);
-                            Series<DataPoint> series2 = graphList.get(0).getSecondScale().getSeries().get(0);
+                            //change data display as seekbar moves
+                            GraphView currentGraph=graphList.get(checkedRadioButton.getId()) ;
+                            Series<DataPoint> series1 ;
+                            Series<DataPoint> series2 ;
 
-                            //Log.i("progress bar",Integer.toString(progress)) ;
+                            //change series 1's feature in tableLayout
+                            for(int i=0;i<currentGraph.getSeries().size();i++) {
+
+                                series1 = currentGraph.getSeries().get(i);
+
+                                //Log.i("progress bar",Integer.toString(progress)) ;
+                                // timeDataTextView.setText(String.valueOf(transFormat.format(series.getHighestValueX()))) ;
+                                //Toast toast = Toast.makeText(mainActivity.getApplicationContext(),
+                                //        String.valueOf(series.getValues(statManager.getXData()[progress+1], statManager.getXData()[progress]).next().getX()), Toast.LENGTH_LONG);
+                                // toast.setGravity(Gravity.CENTER, 0, 0);
+                                // toast.show();
+
+
+                                variableDataTextSeries1[i].setText(String.valueOf(series1.getValues(statManager.getXDataList().get(checkedRadioButton.getId())[progress + 1],
+                                        statManager.getXDataList().get(checkedRadioButton.getId())[progress]).next().getY()));
+                            }
+
+                            //change series 1's feature in tableLayout
+                            for(int i=0;i<currentGraph.getSecondScale().getSeries().size();i++) {
+
+                                series2 =currentGraph.getSecondScale().getSeries().get(i);
+
+                                //Log.i("progress bar",Integer.toString(progress)) ;
+                                // timeDataTextView.setText(String.valueOf(transFormat.format(series.getHighestValueX()))) ;
+                                //Toast toast = Toast.makeText(mainActivity.getApplicationContext(),
+                                //        String.valueOf(series.getValues(statManager.getXData()[progress+1], statManager.getXData()[progress]).next().getX()), Toast.LENGTH_LONG);
+                                // toast.setGravity(Gravity.CENTER, 0, 0);
+                                // toast.show();
+
+                                variableDataTextSeries2[i].setText(String.valueOf(series2.getValues(statManager.getXDataList().get(checkedRadioButton.getId())[progress + 1],
+                                        statManager.getXDataList().get(checkedRadioButton.getId())[progress]).next().getY()));
+
+
+                            }
+
                             SimpleDateFormat transFormat = new SimpleDateFormat("HH:mm");
-                            timeDataTextView.setText(String.valueOf(transFormat.format(series.getValues(statManager.getXData()[progress + 1], statManager.getXData()[progress]).next().getX())));
-                            // timeDataTextView.setText(String.valueOf(transFormat.format(series.getHighestValueX()))) ;
-                            //Toast toast = Toast.makeText(mainActivity.getApplicationContext(),
-                            //        String.valueOf(series.getValues(statManager.getXData()[progress+1], statManager.getXData()[progress]).next().getX()), Toast.LENGTH_LONG);
-                            // toast.setGravity(Gravity.CENTER, 0, 0);
-                            // toast.show();
-                            for (int i = 0; i < graphList.get(0).getSeries().size(); i++) {
-
-                                variableDataTextSeries1[i].setText(String.valueOf(series.getValues(statManager.getXData()[progress + 1], statManager.getXData()[progress]).next().getY()));
-
-                            }
-
-                            for (int i = 0; i < graphList.get(0).getSecondScale().getSeries().size(); i++) {
-
-                                variableDataTextSeries2[i].setText(String.valueOf(series2.getValues(statManager.getXData()[progress + 1], statManager.getXData()[progress]).next().getY()));
-
-                            }
-
+                            //timeDataTextView.setText(String.valueOf(transFormat.format(series1.getValues(statManager.getXData()[progress + 1], statManager.getXData()[progress]).next().getX())));
+                            timeDataTextView.setText(transFormat.format(new Date((long)(statManager.getXDataList().get(checkedRadioButton.getId())[progress])))) ;
                         }
 
                         @Override

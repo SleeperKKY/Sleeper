@@ -9,7 +9,7 @@ import android.util.Log;
 //  @ Project : Sleeper
 //  @ File Name : clResponseMessage
 //  @ Date : 2015-09-06
-//  @ Author : Kang Shin Wook, Kim Hyun Woong, Lim Hyun Woo
+//  @ Author : Kang Shin Wook
 //  @ Email : rkdtlsdnr102@naver.com
 
 
