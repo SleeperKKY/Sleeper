@@ -5,7 +5,7 @@ package org.androidtown.sleeper.endclasses;//
 //  @ Project : Sleeper
 //  @ File Name : clMyDatabase.java
 //  @ Date : 2015-08-13
-//  @ Author : Kang Shin Wook
+//  @ Author : Kang Shin Wook, Kim Hyun Woong
 //
 //
 
@@ -32,7 +32,7 @@ public class clMyDatabaseManager implements clDataProcessor.clDatabaseManager.ID
 
 	public static final String colSleepLevel ="SleepLevel";
 
-	public static final String viewEmps="ViewEmps";
+	//public static final String viewEmps="ViewEmps";
 
 	private SQLiteOpenHelper parentDBHelper=null ;
 
@@ -65,13 +65,13 @@ public class clMyDatabaseManager implements clDataProcessor.clDatabaseManager.ID
 	public void onInsertSummaryTable(int rowIndex)
 	{
 
-		Log.i("Created Table Name's num",Integer.toString(rowIndex)) ;
+		//Log.i("Created Table Name's num",Integer.toString(rowIndex)) ;
 
         SQLiteDatabase db=parentDBHelper.getWritableDatabase() ;
 		//create data table
         db.execSQL("CREATE TABLE " + dataTable + Integer.toString(rowIndex) + " (" + colElapseCnt + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                colTime + " INTEGER, " + colSleepLevel + " REAL, " + colTemp + " REAL NOT NULL, " +
-                colDecisionValue + " INTEGER NOT NULL)") ;
+                colTime + " INTEGER, " + colSleepLevel + " INTEGER, " + colTemp + " INTEGER, " +
+                colDecisionValue + " INTEGER)") ;
 
 		count=rowIndex ;
 

@@ -8,7 +8,7 @@ package org.androidtown.sleeper.propclasses.app_manager;
 //  @ Project : Sleeper
 //  @ File Name : clApp.java
 //  @ Date : 2015-09-06
-//  @ Author : Kang Shin Wook, Kim Hyun Woong, Kim Hyun Woo
+//  @ Author : Kang Shin Wook, Kim Hyun Woong, Lim Hyun Woo
 //  @ Email : rkdtlsdnr102@naver.com
 
 import android.app.AlarmManager;
@@ -95,12 +95,9 @@ public class clApp{
 	 */
 	public void startSleepMode(long ringTimeMillis) {
 
-	//	if(isConnectedViaWifi())
-
-		//if wakelock is not held
-
 		if(!isRunning) {
 
+			//if wakelock is not held
 			if (!wakelock.isHeld())
 				wakelock.acquire();
 
@@ -119,8 +116,6 @@ public class clApp{
 
 			isRunning=true ;
 		}
-	//	else
-	//		Log.d(toString(),"Error in wifi connection") ;
 	
 	}
 
@@ -181,12 +176,6 @@ public class clApp{
 
 		return DataProcessor ;
 	}
-
-    /*
-	public HashMap<Object,HashMap<Integer,Object>> CreateStatData(Object type) {
-	
-	}
-	*/
 
     @Deprecated
     /**
