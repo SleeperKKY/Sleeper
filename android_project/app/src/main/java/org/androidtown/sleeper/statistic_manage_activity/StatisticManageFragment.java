@@ -2,6 +2,7 @@ package org.androidtown.sleeper.statistic_manage_activity;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -57,11 +58,13 @@ public class StatisticManageFragment extends Fragment{
 
         rootView=inflater.inflate(R.layout.layout_statistic_manage, container, false) ;
 
-        //Log.i(toString(), "On Create View called") ;
+        Log.i(toString(), "On Create View called") ;
 
         //display only if statmanager is set
-        if(statManager!=null)
-            InitDisplay() ;
+        if(statManager!=null) {
+            Log.i("hello",toString()) ;
+            InitDisplay();
+        }
 
         return rootView ;
     }
@@ -162,13 +165,13 @@ public class StatisticManageFragment extends Fragment{
                     tableLayout.addView(timetableRow);
 
                     //�ø���1, �ø���2�� ���� textview �迭���� ���� �����Ѵ�.
-                    variableDataTextSeries1 = new TextView[graphList.get(0).getSeries().size()];
-                    variableDataTextSeries2 = new TextView[graphList.get(0).getSecondScale().getSeries().size()];
-                    variableDataNameTextSeries1 = new TextView[graphList.get(0).getSeries().size()];
-                    variableDataNameTextSeries2 = new TextView[graphList.get(0).getSecondScale().getSeries().size()];
+                    variableDataTextSeries1 = new TextView[graph.getSeries().size()];
+                    variableDataTextSeries2 = new TextView[graph.getSecondScale().getSeries().size()];
+                    variableDataNameTextSeries1 = new TextView[graph.getSeries().size()];
+                    variableDataNameTextSeries2 = new TextView[graph.getSecondScale().getSeries().size()];
 
                     //������1 �� textview�� tablerow�� ����Ѵ�.
-                    for (int i = 0; i < graphList.get(0).getSeries().size(); i++) {
+                    for (int i = 0; i < graph.getSeries().size(); i++) {
 
                         TableRow tableRowScale1 = new TableRow(mainActivity.getApplicationContext());
 
@@ -186,13 +189,13 @@ public class StatisticManageFragment extends Fragment{
                         tableLayout.addView(tableRowScale1);
                     }
 
-                    for (int i = 0; i < graphList.get(0).getSecondScale().getSeries().size(); i++) {
+                    for (int i = 0; i < graph.getSecondScale().getSeries().size(); i++) {
 
                         TableRow tableRowScale2 = new TableRow(mainActivity.getApplicationContext());
 
                         variableDataNameTextSeries2[i] = new TextView(mainActivity.getApplicationContext());
                         variableDataTextSeries2[i] = new TextView(mainActivity.getApplicationContext());
-                        variableDataNameTextSeries2[i].setText(graphList.get(0).getSecondScale().getSeries().get(i).getTitle());
+                        variableDataNameTextSeries2[i].setText(graph.getSecondScale().getSeries().get(i).getTitle());
                         variableDataNameTextSeries2[i].setTextColor(0xFF909090);
                         variableDataNameTextSeries2[i].setTextSize(30);
                         variableDataTextSeries2[i].setText("move SeekBar");
@@ -206,7 +209,7 @@ public class StatisticManageFragment extends Fragment{
 
                     horizontalAxisSeekBar = (SeekBar) rootView.findViewById(R.id.seekBar);
 
-                    horizontalAxisSeekBar.setMax(statManager.getDataSize() - 2);
+                    horizontalAxisSeekBar.setMax(statManager.getDataSizeList().get(v) - 2);
                     horizontalAxisSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
                         @Override
                         public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -221,13 +224,6 @@ public class StatisticManageFragment extends Fragment{
 
                                 series1 = currentGraph.getSeries().get(i);
 
-                                //Log.i("progress bar",Integer.toString(progress)) ;
-                                // timeDataTextView.setText(String.valueOf(transFormat.format(series.getHighestValueX()))) ;
-                                //Toast toast = Toast.makeText(mainActivity.getApplicationContext(),
-                                //        String.valueOf(series.getValues(statManager.getXData()[progress+1], statManager.getXData()[progress]).next().getX()), Toast.LENGTH_LONG);
-                                // toast.setGravity(Gravity.CENTER, 0, 0);
-                                // toast.show();
-
 
                                 variableDataTextSeries1[i].setText(String.valueOf(series1.getValues(statManager.getXDataList().get(checkedRadioButton.getId())[progress + 1],
                                         statManager.getXDataList().get(checkedRadioButton.getId())[progress]).next().getY()));
@@ -237,13 +233,6 @@ public class StatisticManageFragment extends Fragment{
                             for(int i=0;i<currentGraph.getSecondScale().getSeries().size();i++) {
 
                                 series2 =currentGraph.getSecondScale().getSeries().get(i);
-
-                                //Log.i("progress bar",Integer.toString(progress)) ;
-                                // timeDataTextView.setText(String.valueOf(transFormat.format(series.getHighestValueX()))) ;
-                                //Toast toast = Toast.makeText(mainActivity.getApplicationContext(),
-                                //        String.valueOf(series.getValues(statManager.getXData()[progress+1], statManager.getXData()[progress]).next().getX()), Toast.LENGTH_LONG);
-                                // toast.setGravity(Gravity.CENTER, 0, 0);
-                                // toast.show();
 
                                 variableDataTextSeries2[i].setText(String.valueOf(series2.getValues(statManager.getXDataList().get(checkedRadioButton.getId())[progress + 1],
                                         statManager.getXDataList().get(checkedRadioButton.getId())[progress]).next().getY()));

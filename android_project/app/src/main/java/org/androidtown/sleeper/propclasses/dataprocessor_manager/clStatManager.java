@@ -25,36 +25,67 @@ import com.jjoe64.graphview.GraphView;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Statmanager is interface class between object that collects data and view that displays statistics
+ * using those collected data. StatManager needs GraphView 4.0 version.
+ *
+ * In our app, an object that collects data should create graph and put in StatManager instance. Then
+ * in StatisticManageFragment displays statistic in the format that we set here: graphList is graph
+ * that is displayed. There is scroll bar in StatisticManageFragment, which enable you to see y value at
+ * specific x value. Data that change over scroll movement is ,as we call, variable data. But sometimes
+ * we want to display static data, for example wake time, sleep time. So we made property staticDataList
+ * so that developer can put static data. They are displayed in order that data were put in staticDataList.
+ *
+ */
 public class clStatManager {
 	private List<GraphView> graphList=null;
 	private List<String> staticData=null;
 	private List<String> staticDataName=null;
 	private List<double[]> xDataList =null ;
-	private int dataSize=0 ;
+	private List<Integer> dataSizeList=null ;
 
+	/**
+	 * Constructor
+	 */
 	public clStatManager() {
 
 		graphList=new ArrayList<>() ;
 		staticData=new ArrayList<>() ;
 		staticDataName=new ArrayList<>() ;
 		xDataList=new ArrayList<>() ;
+		dataSizeList=new ArrayList<>() ;
 	}
-	
-	public void addGraph(GraphView graph) {
+
+	/**
+	 * Add graph to display
+	 * @param graph graph to display
+	 */
+	public void addGraph(GraphView graph,int dataSize) {
 
 		graphList.add(graph) ;
+		dataSizeList.add(dataSize) ;
 
 	}
-	
+
+	/**
+	 * Get graph list
+	 * @return graphlist that user defined
+	 */
 	public List getGraphList() {
 
 		return graphList ;
 	}
 
+	/**
+	 * Set datasize of graph. All graph
+	 * @param size
+	 */
+	/*
 	public void setDataSize(int size){
 
 		dataSize=size ;
 	}
+	*/
 	
 	public void addStaticData(String dataName, String data) {
 
@@ -67,9 +98,9 @@ public class clStatManager {
 		return staticData ;
 	}
 
-	public int getDataSize(){
+	public List<Integer> getDataSizeList(){
 
-		return dataSize ;
+		return  dataSizeList;
 	}
 
 	public List getStaticDataNameList(){

@@ -92,7 +92,7 @@ public abstract class clDataProcessor implements clComManager.IMessageListener {
         //put attributes in relation dataSummary
         ContentValues cv = new ContentValues() ;
         cv.put(clDatabaseManager.colDate,dateFormat.format(System.currentTimeMillis()));
-        cv.put(clDatabaseManager.colStartTime,System.currentTimeMillis()) ;
+        cv.put(clDatabaseManager.colStartTime, System.currentTimeMillis()) ;
         cv.put(clDatabaseManager.colEndTime,0) ;
 
         Database.insertSummaryTable(cv);
@@ -113,33 +113,46 @@ public abstract class clDataProcessor implements clComManager.IMessageListener {
         sleepClassifier.detach() ;
         isRunning=false ;
 
+        int lastRowId ;
+
         SQLiteDatabase db=Database.getWritableDatabase();
 
-        Cursor cursor = db.rawQuery("SELECT StartTime FROM DataTable_summary where _id = (select _id from DataTable_summary order by _id desc limit 1)", null);
+        //retrieve last summarydataTable's last row id
+        String[] colId={clDatabaseManager.colCnt} ;
+        Cursor cursor=db.query(clDatabaseManager.summarydataTable, colId, null, null, null, null, null) ;
+        cursor.moveToLast() ;
+
+        lastRowId=cursor.getInt(cursor.getColumnIndex(clDatabaseManager.colCnt)) ;
+
+        cursor.close() ;
+
+        //retrieve starttime of row with last row id
+        String[] colStartTime={clDatabaseManager.colStartTime} ;
+        String where=clDatabaseManager.colCnt+" = ? " ;
+        String[] whereArgs={Integer.toString(lastRowId)} ;
+        cursor=db.query(clDatabaseManager.summarydataTable,colStartTime,where,whereArgs,null,null,null) ;
         //update end time to row of datatable_summary table that was added at the start of this measure
-        //SimpleDateFormat endTimeFormat = new SimpleDateFormat("HH:mm");
         cursor.moveToFirst() ;
-        long startTime=cursor.getLong(0) ;
+
+        long startTime=cursor.getLong(cursor.getColumnIndex(clDatabaseManager.colStartTime)) ;
         long endTime=System.currentTimeMillis() ;
+
 
         cursor.close() ;
 
         //if tracked time is less than sleep state retrieve period, which means no data inserted
        if(endTime-startTime<=clSleepStageClassifier.SleepStateRetrievePeriod)
        {
-           Log.i("measureStop","delete") ;
-           Database.deleteSummaryTable(startTime);
+           //Log.i("measureStop","delete") ;
+           Database.deleteSummaryTable(lastRowId) ;
 
        }else {//else
 
-           Log.i("measureStop","update end") ;
+           //Log.i("measureStop", "update end") ;
            ContentValues cv = new ContentValues();
            cv.put(clDatabaseManager.colEndTime, System.currentTimeMillis());
 
-           cursor = db.rawQuery("SELECT _id FROM DataTable_summary where _id = (select _id from DataTable_summary order by _id desc limit 1)", null);
-           cursor.moveToFirst();
-           String[] whereArgs = {cursor.getString(0)};
-           Database.updateSummaryTable(cv, " _id=? ", whereArgs);
+           Database.updateSummaryTable(cv, where, whereArgs);
        }
 
         db.close() ;
@@ -476,7 +489,7 @@ public abstract class clDataProcessor implements clComManager.IMessageListener {
 
             for(int i=0;i< FFTBinSize;i++) {
 
-                Log.i("fftMagnitudeListSize",Integer.toString(fftMagnitudeListSize)) ;
+                //Log.i("fftMagnitudeListSize",Integer.toString(fftMagnitudeListSize)) ;
 
                 for (int j = 0; j < fftMagnitudeListSize; j++) {
 
@@ -521,8 +534,8 @@ public abstract class clDataProcessor implements clComManager.IMessageListener {
             int fftFrameSize=intensityArray.length/(int)(SleepStateRetrievePeriod/FFTFeatureSampleRetrievePeriod) ;
             int i=0 ;
 
-            Log.i("intensityArraySize",Integer.toString(intensityArray.length)) ;
-            Log.i("fftFrameSize",Integer.toString(fftFrameSize)) ;
+            //Log.i("intensityArraySize",Integer.toString(intensityArray.length)) ;
+            //Log.i("fftFrameSize",Integer.toString(fftFrameSize)) ;
             //coordinate intensity length, discard ramaning after dividing with fftFrameSize
             int fftLength=intensityArray.length-(intensityArray.length%fftFrameSize) ;
 
@@ -532,7 +545,7 @@ public abstract class clDataProcessor implements clComManager.IMessageListener {
             for(i=0;i<fftLength;i+=fftFrameSize)
             {
                 calcFFTFeature(intensityArray, i, i + fftFrameSize);
-                Log.i("real fftFrameSize", Integer.toString(i)) ;
+               // Log.i("real fftFrameSize", Integer.toString(i)) ;
 
             }
 
@@ -622,24 +635,14 @@ public abstract class clDataProcessor implements clComManager.IMessageListener {
 
                     final Double[] intensityArray = intensityList.toArray(new Double[intensityList.size()]);
 
-
-                    //intensityArrayLength=intensityArray.length ;
                     //remove sensor noise
                     removeSensorNoise(intensityArray);
-
-                    //remove outlier
-                    //removeOutlier(intensityArray);
 
                     //estimate pim
                     estimatePIM(intensityArray);
 
                     estimateFFTFeature(intensityArray);
 
-                    //estimate zcm
-                    //estimateZCM(intensityArray);
-
-                    //estimate movement count
-                    // estimateMovementCount(intensityArray) ;
 
                     estimateIntensityAvg(intensityArray);
 
@@ -664,13 +667,6 @@ public abstract class clDataProcessor implements clComManager.IMessageListener {
                         });
                     }
 
-                    /*
-                    //clear intensity values, offset, magnitude values
-                    intensityList.clear();
-                    //intensityList_offset = 0;
-                    fftMagnitudeList.clear() ;
-                    */
-
                     reset() ;
                 }
 
@@ -685,7 +681,6 @@ public abstract class clDataProcessor implements clComManager.IMessageListener {
             clDataTimer.getInstance().registerDataTimerListener(ClassifySleepType, SleepStateRetrievePeriod) ;
 
             //register accelerometer sensor listener
-
             sensorEventListener=new SensorEventListener() {
 
                 @Override
@@ -778,10 +773,6 @@ public abstract class clDataProcessor implements clComManager.IMessageListener {
                 if(!file.exists()) {
                     isSuccess = file.createNewFile();
                 }
-
-                boolean result;
-
-                String file_content = null;
 
                 SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
 
@@ -999,23 +990,18 @@ public abstract class clDataProcessor implements clComManager.IMessageListener {
 
         /**
          * Delete one row by unique startTime
-         * @param startTime start time to identify row
+         * @param rowId id of row to delete
          */
-        public void deleteSummaryTable(long startTime){
+        public void deleteSummaryTable(int rowId){
 
             SQLiteDatabase db=getWritableDatabase() ;
-            String[] colNames={colCnt} ;
-            String where=colStartTime+"=?" ;
-            String[] whereArgs={Long.toString(startTime)} ;
-            Cursor cursor=db.query(summarydataTable, colNames, where, whereArgs,null,null,null) ;
 
-            cursor.moveToFirst() ;
+            String where=colCnt+"=?" ;
+            String[] whereArgs={Long.toString(rowId)} ;
 
-            int rowId=cursor.getInt(0) ;
+            db.delete(summarydataTable,where,whereArgs) ;
 
-            db.delete(summarydataTable, where, whereArgs) ;
-
-            Log.i("To delete Row id", Integer.toString(rowId)) ;
+            //Log.i("To delete Row id", Integer.toString(rowId)) ;
 
             for(IDbChangeListener listener : listenerList)
                 listener.onDeleteSummaryTable(rowId);

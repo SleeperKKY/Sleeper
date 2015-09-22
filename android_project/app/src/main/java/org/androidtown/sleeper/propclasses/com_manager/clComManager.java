@@ -195,7 +195,7 @@ public class clComManager{
 		reqMsgQueue.add(reqMsg) ;
 	}
 
-    private class clComManagerThreadTask implements Runnable{
+    private class clComManagerThreadTask implements Runnable {
 
         //code for testing message translating, do not erase
 
@@ -266,143 +266,145 @@ public class clComManager{
 
 
 //code for real, do not erase
-/*
-    @Override
-    public void run() {
 
-        //if ip address is set
-        if (ipAddr != null) {
+        /*
+        @Override
+        public void run() {
 
-            try {
-                //initialize socket
-                devSocket = new Socket(ipAddr, port);
-                devSocket.setSoTimeout(timeout_unit);
-
-                //tempStartFlag =true ;
-
-                Log.i("Connected ip", ipAddr.getHostAddress());
-
-                //use input stream, output stream of created socket
-                try {
-                    diStream = new DataInputStream(devSocket.getInputStream());
-                    doStream = new DataOutputStream(devSocket.getOutputStream());
-
-                } catch (IOException e) {
-
-                    Log.e(toString(), e.getMessage());
-                    Log.i(toString(), "Error creating input, output stream");
-                }
-
-                //while devSocket is alive and not closed
-                while (reqMsgQueue.isEmpty()) ;
-
-                //if there're some request message to send
-                clRequestMessage reqMsg = null;
-                String rcvStream = "";
-
-                //poll one request message from queue
-                reqMsg = reqMsgQueue.poll();
+            //if ip address is set
+            if (ipAddr != null) {
 
                 try {
-                    Log.i(toString(), "Req: " + reqMsg.makeMessage());
-                    Log.i(toString(), "Req ControlInfo: " + reqMsg.getDeviceMessage());
+                    //initialize socket
+                    devSocket = new Socket(ipAddr, port);
+                    devSocket.setSoTimeout(timeout_unit);
 
-                    byte[] bytes = reqMsg.makeMessage().getBytes();
+                    //tempStartFlag =true ;
 
-                    for (int i = 0; i < bytes.length; i++) {
+                    Log.i("Connected ip", ipAddr.getHostAddress());
 
-                        Log.i("Req bytes", Byte.toString(bytes[i]) + " ");
+                    //use input stream, output stream of created socket
+                    try {
+                        diStream = new DataInputStream(devSocket.getInputStream());
+                        doStream = new DataOutputStream(devSocket.getOutputStream());
+
+                    } catch (IOException e) {
+
+                        Log.e(toString(), e.getMessage());
+                        Log.i(toString(), "Error creating input, output stream");
                     }
 
-                    //doStream.writeChars(reqMsg.makeMessage());
-                    doStream.write(reqMsg.makeMessage().getBytes());
+                    //while devSocket is alive and not closed
+                    while (reqMsgQueue.isEmpty()) ;
 
-                    Log.i(toString(), "Message Sent");
+                    //if there're some request message to send
+                    clRequestMessage reqMsg = null;
+                    String rcvStream = "";
 
-                    byte ch;
-                    int timeoutCnt = 0;
-                    boolean responseReceived = false;
-                    //if timeout count has exceeded maximum count or
-                    //response message is received
-
-                    while (timeoutCnt != timeout_count) {
-
-                        try {
-
-                            Log.i(toString(), "enter receiving mode");
-                            ch = diStream.readByte();//read one byte each time
-
-                            Log.i(toString(), "Received Message: " + Byte.toString(ch));
-
-                            if (ch == endChar) {
-                                //set response receive flag true for indicating successful receiving response message
-                                responseReceived = true;
-                                Log.i(toString(), "End Char Received!!");
-                                //disconnect after message is received
-                                break;
-                            } else {
-
-                                //if it reached end of one string
-                                rcvStream += (char) ch;
-                            }
-
-                        } catch (Exception e) {
-
-                            Log.e("Any exception", "Unknown exception occured");
-                            timeoutCnt++;
-                            break;
-                        }
-                    }
-
-                    //if got response message successfully
-                    disconnect();//disconnect socket
+                    //poll one request message from queue
+                    reqMsg = reqMsgQueue.poll();
 
                     try {
-                        Thread.sleep(1000);
+                        Log.i(toString(), "Req: " + reqMsg.makeMessage());
+                        Log.i(toString(), "Req ControlInfo: " + reqMsg.getDeviceMessage());
 
-                    } catch (InterruptedException e) {
+                        byte[] bytes = reqMsg.makeMessage().getBytes();
 
-                    }
+                        for (int i = 0; i < bytes.length; i++) {
 
+                            Log.i("Req bytes", Byte.toString(bytes[i]) + " ");
+                        }
 
-                    if (responseReceived) {
+                        //doStream.writeChars(reqMsg.makeMessage());
+                        doStream.write(reqMsg.makeMessage().getBytes());
 
-                        final clResponseMessage resMsg = new clResponseMessage();
+                        Log.i(toString(), "Message Sent");
 
-                        resMsg.dissolveMessage(rcvStream);
+                        byte ch;
+                        int timeoutCnt = 0;
+                        boolean responseReceived = false;
+                        //if timeout count has exceeded maximum count or
+                        //response message is received
 
-                        //create handler and post it on main looper for synchronizing with
-                        //dataprocessor that runs on main looper
+                        while (timeoutCnt != timeout_count) {
 
-                        new Handler(Looper.getMainLooper()).post(new Runnable() {
+                            try {
 
-                            @Override
-                            public void run() {
+                                Log.i(toString(), "enter receiving mode");
+                                ch = diStream.readByte();//read one byte each time
 
-                                MessageListener.onReceiveMessageEvent(resMsg);
+                                Log.i(toString(), "Received Message: " + Byte.toString(ch));
+
+                                if (ch == endChar) {
+                                    //set response receive flag true for indicating successful receiving response message
+                                    responseReceived = true;
+                                    Log.i(toString(), "End Char Received!!");
+                                    //disconnect after message is received
+                                    break;
+                                } else {
+
+                                    //if it reached end of one string
+                                    rcvStream += (char) ch;
+                                }
+
+                            } catch (Exception e) {
+
+                                Log.e("Any exception", "Unknown exception occured");
+                                timeoutCnt++;
+                                break;
                             }
+                        }
 
-                        });
+                        //if got response message successfully
+                        disconnect();//disconnect socket
 
+                        try {
+                            Thread.sleep(1000);
+
+                        } catch (InterruptedException e) {
+
+                        }
+
+
+                        if (responseReceived) {
+
+                            final clResponseMessage resMsg = new clResponseMessage();
+
+                            resMsg.dissolveMessage(rcvStream);
+
+                            //create handler and post it on main looper for synchronizing with
+                            //dataprocessor that runs on main looper
+
+                            new Handler(Looper.getMainLooper()).post(new Runnable() {
+
+                                @Override
+                                public void run() {
+
+                                    MessageListener.onReceiveMessageEvent(resMsg);
+                                }
+
+                            });
+
+                        }
+
+
+                    } catch (IOException e) {
+
+                        Log.e("Disconnection Occured", e.getMessage());
+                        disconnect();
                     }
 
+                } catch (IOException e) {//if error occured with creating socket
 
-                } catch (IOException e) {
-
-                    Log.e("Disconnection Occured", e.getMessage());
-                    disconnect();
+                    Log.e("Error Creating Socket", e.getMessage());
+                    //startFlag=false ;
+                    devSocket=null ;
                 }
 
-            } catch (IOException e) {//if error occured with creating socket
-
-                Log.e("Error Creating Socket", e.getMessage());
-                //startFlag=false ;
+            } else {//if ip address is not set
+                Log.e(toString(), "No Ip Address Set");
             }
-
-        } else {//if ip address is not set
-            Log.e(toString(), "No Ip Address Set");
         }
-    }
 
     */
     }

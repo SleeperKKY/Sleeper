@@ -27,7 +27,7 @@ import java.util.Date;
  * instance of clDataProcessor.clDatabaseManager and query dataSummary table and displays Date, StartTime,
  * EndTime.
  */
-    public class StatisticManageSelectFragment extends Fragment {
+public class StatisticManageSelectFragment extends Fragment {
 
     private View rootView ;
     private ListView  listView;
@@ -35,16 +35,16 @@ import java.util.Date;
     public static final String Tag="StatisticManageSelectFragment" ;
 
 
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                 Bundle savedInstanceState){
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState){
 
-            //inflate layout_sleep_manage layout into its fragment
-            rootView=inflater.inflate(R.layout.layout_statistic_manage_select,container,false) ;
+        //inflate layout_sleep_manage layout into its fragment
+        rootView=inflater.inflate(R.layout.layout_statistic_manage_select,container,false) ;
 
 
-            return rootView ;
-        }
+        return rootView ;
+    }
 
     @Override
     public void onStart() {
@@ -55,8 +55,9 @@ import java.util.Date;
         final  MainActivity mainActivity = (MainActivity) getActivity();
         final clDataProcessor.clDatabaseManager db = mainActivity.getApp().getDataProcessor().getDatabase();
 
+        Log.i("Started",toString()) ;
+
         try {
-            //final Cursor cursor = db.getWritableDatabase().rawQuery("SELECT _id, Date, StartTime, EndTime FROM DataTable_summary", null);
 
             //all column in dataSummary table
             final String[] columns = new String[]{clDataProcessor.clDatabaseManager.colCnt,
@@ -78,6 +79,7 @@ import java.util.Date;
 
             //listener for when we click one item on list view
             AdapterView.OnItemClickListener mItemClickListener = new AdapterView.OnItemClickListener() {
+
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
@@ -92,16 +94,12 @@ import java.util.Date;
                         //note that item index is not equal to row id of that item in dataSummary table
                         //that's why we should pass real row id by mapping of item's index in cursor which
                         //has equal size with listview
-
                         MainActivity mainActivity = (MainActivity) getActivity();
                         statisticManageFragment.setStatManager(mainActivity.getApp().getDataProcessor().createStatManager(
                                 cursor.getInt(cursor.getColumnIndex(clDataProcessor.clDatabaseManager.colCnt))
                         ));
-                        /*
-                        statisticManageFragment.setTablePosition(cursor.getInt(
-                                cursor.getColumnIndex(clDataProcessor.clDatabaseManager.colCnt)
-                        ));
-                        */
+
+                        Log.i("itemSelected",Integer.toString(position)) ;
 
                         //getSupportFragmentManager().popBackStack();
                         mainActivity.getSupportFragmentManager().beginTransaction().replace(R.id.fragmentContainer,statisticManageFragment,StatisticManageFragment.Tag).
@@ -113,46 +111,43 @@ import java.util.Date;
                 }
             };
 
+            Log.i("listenerAttaching",toString()) ;
+            listView.setOnItemClickListener(mItemClickListener);
 
-            View button=rootView.findViewById(R.id.btnRemoveAllData) ;
+
+            View button=rootView.findViewById(R.id.btnRemoveAllData);
 
             button.setOnClickListener(new View.OnClickListener() {
 
                 @Override
                 public void onClick(View v) {
 
+                    //get cursor from cursor adapter
                     Cursor cur = adapter.getCursor();
 
                     if (cur.getCount() > 0) {
 
+                        //move cursor to first since it is pointing to last
                         cur.moveToFirst();
 
-                        long startTime;
+                        db.deleteSummaryTable(cur.getInt(cur.getColumnIndex(clDataProcessor.clDatabaseManager.colCnt)));
 
-                        //delete row in summary table by 'startTime' since we don't know what row id
-                        //of selected item in listview. Although this button removes all row from
-                        //dataSummary table, we made it delete one row by row in case some developer
-                        //wants to implement feature to delete only one row.
-
-                        startTime = cur.getLong(cur.getColumnIndex(clDataProcessor.clDatabaseManager.colStartTime));
-                        db.deleteSummaryTable(startTime);
-
+                        //remove all data
                         while (cur.moveToNext()) {
 
-                            startTime = cur.getLong(cur.getColumnIndex(clDataProcessor.clDatabaseManager.colStartTime));
-                            db.deleteSummaryTable(startTime);
+                            //startTime = cur.getLong(cur.getColumnIndex(clDataProcessor.clDatabaseManager.colStartTime));
+                            db.deleteSummaryTable(cur.getInt(cur.getColumnIndex(clDataProcessor.clDatabaseManager.colCnt)));
 
                         }
 
                         final Cursor cursor = db.getWritableDatabase().query(clDataProcessor.clDatabaseManager.summarydataTable, columns,
                                 null, null, null, null, null);
 
+                        //swap cursor
                         adapter.swapCursor(cursor);
                     }
                 }
             }) ;
-
-            listView.setOnItemClickListener(mItemClickListener);
 
 
         }catch(IllegalStateException e){
@@ -205,63 +200,4 @@ import java.util.Date;
             return super.newView(context, cursor, parent);
         }
     }
-
-
-    /*
-    public class SleepDateItemAdapter extends BaseAdapter{
-
-        ArrayList<SleepDateItem> items = new ArrayList<SleepDateItem>();
-
-        @Override
-        public int getCount() {
-
-            return items.size();
-        }
-
-        public void addItem(SleepDateItem item){
-            items.add(item);
-        }
-
-        @Override
-        public Object getItem(int position) {
-
-            return items.get(position);
-
-        }
-
-        @Override
-        public long getItemId(int position) {
-
-
-            return position;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-
-            SleepDataItemView view = null;
-            if(convertView == null){
-                view =new SleepDataItemView(getActivity());
-            }else{
-                view=(SleepDataItemView) convertView;
-            }
-            view.setOnClickListener(new View.OnClickListener(){
-                @Override
-                public void onClick(View v) {
-
-                    MainActivity mainActivity = (MainActivity) getParentFragment().getActivity();
-                    mainActivity.ViewStatisticManage();
-                    //get datatable using datatable_summary
-                }
-            });
-
-            SleepDateItem curItem =items.get(position);
-
-            view.setItemDate(curItem.getDate());
-            view.setItemSleep(curItem.getSleep());
-            view.setItemWake(curItem.getWake());
-
-            return view;
-        }
-    }*/
-    }
+}

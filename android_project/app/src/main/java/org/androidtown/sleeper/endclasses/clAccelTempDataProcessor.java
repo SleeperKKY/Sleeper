@@ -370,10 +370,9 @@ public class clAccelTempDataProcessor extends clDataProcessor implements clDataP
 		long time ;
 		int sleepLevelVal ;
 		double tempVal ;
-		Date to ;
 
 		int dataPointsIndex=0 ;
-        //double dataPointTime=0 ;//dataPoint time should be down
+
 		//search queries
 		while(myCursor.moveToNext()) {
 
@@ -388,8 +387,6 @@ public class clAccelTempDataProcessor extends clDataProcessor implements clDataP
 
 			dataPointsIndex++ ;
 		}
-
-		statManager.setDataSize(sleepLevelData.length);
 
 		//make graph
 		GraphView graph=new GraphView(AttachedContext) ;
@@ -430,7 +427,10 @@ public class clAccelTempDataProcessor extends clDataProcessor implements clDataP
 		graph.getSecondScale().addSeries(tempSeries) ;
 		graph.setTitle("Sleep Level & Temp") ;
 
-		statManager.addGraph(graph) ;
+        Log.i("Hello2",toString()) ;
+
+        //set length of graph
+		statManager.addGraph(graph,sleepLevelData.length) ;
 		//set time data
 		statManager.addXData(timeData) ;
 

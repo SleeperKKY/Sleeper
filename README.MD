@@ -21,7 +21,7 @@ We separated library package, 'propclasses', and user implementation sample pack
 of 'app_manager' package, 'communition_manager', 'dataprocessor_manager'. In order to use app, you have to put '**SvmFile**'
 folder above in your android phone's sd card. Just put it, then it is done.
 
-You can visit 'propclasses' package's javadoc in this link:[link]http://sleeperkky.github.io/Sleeper
+You can visit 'propclasses' package's javadoc in this link:![JavaDoc]http://sleeperkky.github.io/Sleeper
 
 ###1.propclasses package
 
@@ -84,15 +84,11 @@ Look around **clAccelTempListener** to see how **IMessageListener**'s onReceiveM
 ###2. endclasses
 
 endclasses package is where user implementation of device controlling mechanism is placed. It consists of **clAccelTempListener**, **clFanMessageConverter**, **clTempMessageConverter**,
-**clMyDatabaseManager**. **clAccelTempListener** extended **clDataProcessor** and implemented its own device controlling mechanism. It works like below:
+**clMyDatabaseManager**. **clAccelTempListener** extended **clDataProcessor** and implemented its own device controlling mechanism.
 
-	(1) register to sleep stage classifier
-	(2) start measure
-	(3) get classified sleep stage at certain time
-	(4) analyse sleep stage change between previous and current sleep stage
-	(5) decide command
-	(6) send command message to remote controlling device
-	(7) repeat (2) ~ (6) until measure stopped
+
+![UserApp Sleep Caring Algorithm](./README_IMG/UserApp_Sleep_Caring_Algorithm.jpg)
+
 
 As we said on **Summary**, the only thing developers have to think is device controlling mechanism using classified sleep stage to improve sleep quality of user.
 **clFanMessageConverter** and **clTempMessageConverter** are device specific message converter. You can make device message using these classes and wrap them in
@@ -108,3 +104,10 @@ We are currently trying to attach, switch multiple dataprocessor and find datapr
 In our approach, we make 'propclasses' package as dex class file and other people can use those classes, like we did in our example user-layer package 'endclasses'.
 Then they make their own endclasses package as jar file again and upload on website. And people who use our our app can download that dex class file and put it inside some known folder in their phone's sd card. 
 Then if user(not developer) connects nearby device then app can get device's **ssid**. We can use ssid to find dataprocessor that supports currently connected device.
+
+##Note
+ 09.20.2015
+  - Feature for practising svm and svm classification is changed from PIM(Propotional Integration Mode), intensity values(sqrt(x^2+y^2+z^2) of accelerometer) to FFT(Fast Fourier Transform) coefficients since value of PIM,
+    intensity values are so dependent on type of accelerometer in various smart phone. We updated all files above to meet that change.
+ 09.22.2015
+  - Removed redundant code in clDatabaseManager in clDataProcessor and in StatisticSelectFragment.
