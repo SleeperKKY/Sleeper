@@ -54,9 +54,6 @@ public class clApp{
 
 	public static final String APP_ACTION_ALARM_TRIGGERED ="APP_ACTION_ALARM_TRIGGERED" ;
 
-//	private long WakeTime=0 ;
-//	private long SleepTime=0 ;
-
 	/**
 	 * Constructor
 	 * @param context context to run app on

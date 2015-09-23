@@ -34,8 +34,10 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * A class that gives app interface to communicate with ap device.
@@ -53,11 +55,11 @@ public class clComManager{
 	private IMessageListener MessageListener=null;
 
 	//port number is always 5000, also on device
-	private static int port=2323 ;
+	private static int port=5000 ;
 	private static InetAddress ipAddr=null ;
 	private static int timeout_unit =10000 ;
 	private static int timeout_count =2 ;
-	private Socket devSocket=null ;
+	//private Socket devSocket=null ;
 
     private byte endChar=126 ;
 
@@ -66,6 +68,10 @@ public class clComManager{
 
 	//request message queue in order to send message fifo
 	private Queue<clRequestMessage> reqMsgQueue =null ;
+    //list of communication task
+    private List<clComManagerThreadTask> taskList =null ;
+    //additional queue for request needs response message or not
+    private Queue<Boolean> needRespMsgQueue=null ;
 
     /**
      * Constructor
@@ -75,7 +81,9 @@ public class clComManager{
 
         MessageListener=messageListener ;
 		reqMsgQueue =new ConcurrentLinkedQueue<>() ;
-	}
+        taskList =new CopyOnWriteArrayList<>() ;
+        needRespMsgQueue=new ConcurrentLinkedQueue<>() ;
+    }
 
     /**
      * Constructor
@@ -83,6 +91,8 @@ public class clComManager{
     public clComManager(){
 
         reqMsgQueue =new ConcurrentLinkedQueue<>() ;
+        taskList =new CopyOnWriteArrayList<>() ;
+        needRespMsgQueue=new ConcurrentLinkedQueue<>() ;
     }
 
     /**
@@ -148,9 +158,16 @@ public class clComManager{
 	 */
     public void connect(){
 
-			new Thread(new clComManagerThreadTask()).start();
+        clComManagerThreadTask task=new clComManagerThreadTask() ;
 
-            //Log.i(null,"Thread started!!") ;
+        //add task to list
+        taskList.add(task) ;
+
+        Log.i("taskList Size", Integer.toString(taskList.size())) ;
+
+        new Thread(task).start();
+
+        //Log.i(null,"Thread started!!") ;
     }
 
 	/**
@@ -162,40 +179,32 @@ public class clComManager{
 	public void disconnect(){
 
 			//do not erase
-			try {
+        int taskSize= taskList.size() ;
 
-				if (devSocket != null) {
+        //disconnect all running task
+        for(int i=0;i<taskSize;i++){
 
-					devSocket.close();
-					devSocket = null;
-
-					Log.i(toString(), "Disconnecting and closing socket");
-				}
-
-			} catch (IOException e) {
-
-				Log.d(toString(), e.getMessage());
-				Log.i(toString(), "Disconnecting and closing socket failed");
-
-			} finally {
-
-				devSocket = null;
-			}
+            taskList.remove(i).disconnect() ;
+        }
 
 	}
-
     /**
-	 * Send request message to device
-	 * it adds request message to queue and thread will poll request message fifo.
-	 * it has to be synchronized since it is used in both main thread, worker thread
-	 * @param reqMsg request message to send
-	 */
-	public synchronized void send(clRequestMessage reqMsg){
+     * Send request message to device
+     * it adds request message to queue and thread will poll request message fifo.
+     * it has to be synchronized since it is used in both main thread, worker thread
+     * @param reqMsg request message to send
+     * @param needResponse true if request needs response message, otherwise false
+     */
+    public synchronized void send(clRequestMessage reqMsg,boolean needResponse){
 
-		reqMsgQueue.add(reqMsg) ;
-	}
+        reqMsgQueue.add(reqMsg) ;
+        needRespMsgQueue.add(needResponse) ;
+
+    }
 
     private class clComManagerThreadTask implements Runnable {
+
+        private Socket devSocket=null ;
 
         //code for testing message translating, do not erase
 
@@ -204,12 +213,11 @@ public class clComManager{
 
             //
 
-            clRequestMessage reqMsg=null ;
+            clRequestMessage reqMsg = null;
 
             //if there're some request message to send
-            //while(startFlag) {
 
-            while(reqMsgQueue.isEmpty()) ;
+            while (reqMsgQueue.isEmpty()) ;
 
             //if (!reqMsgQueue.isEmpty()) {
 
@@ -220,54 +228,63 @@ public class clComManager{
 
 
             //wait for 500 millisecond for receiving
-            try {
-                Thread.sleep(1000);
-            } catch (Exception e) {
 
-                Log.d(e.toString(), e.getMessage());
-            }
+            if (needRespMsgQueue.poll()) {
 
-            String rcvStream = "";
+                try {
+                    Thread.sleep(1000);
+                } catch (Exception e) {
 
-            if (reqMsg.getDeviceID() == clTempSensorMessageConverter.TEMP_ID) {
-
-                rcvStream = (char)clResponseMessage.RES + "\n" + (char)clResponseMessage.SUCCESS + "\n" +
-                        (char)clTempSensorMessageConverter.TEMP_ID + "\n" + (char)clTempSensorMessageConverter.MEASURE_TEMPERATURE +
-                        "" + (char) 35 + "\n";
-
-            } else if (reqMsg.getDeviceID() == clFanMessageConverter.FAN_ID) {
-
-                clFanMessageConverter fanMessageConverter=new clFanMessageConverter() ;
-
-                fanMessageConverter.dissolveDeviceMessage(reqMsg.getDeviceMessage()) ;
-
-                if(fanMessageConverter.getCommand()==clFanMessageConverter.PWM_SET){
-
-                    rcvStream = (char)clResponseMessage.RES + "\n" + (char)clResponseMessage.SUCCESS + "\n" +
-                            (char)clFanMessageConverter.FAN_ID + "\n" + (char)clFanMessageConverter.PWM_SET +
-                            "" + (char)fanMessageConverter.getData() + "\n";
+                    Log.d(e.toString(), e.getMessage());
                 }
 
+                String rcvStream = "";
+
+                if (reqMsg.getDeviceID() == clTempSensorMessageConverter.TEMP_ID) {
+
+                    rcvStream = (char) clResponseMessage.RES + "\n" + (char) clResponseMessage.SUCCESS + "\n" +
+                            (char) clTempSensorMessageConverter.TEMP_ID + "\n" + (char) clTempSensorMessageConverter.MEASURE_TEMPERATURE +
+                            "" + (char) 35 + "\n";
+
+                } else if (reqMsg.getDeviceID() == clFanMessageConverter.FAN_ID) {
+
+                    clFanMessageConverter fanMessageConverter = new clFanMessageConverter();
+
+                    fanMessageConverter.dissolveDeviceMessage(reqMsg.getDeviceMessage());
+
+                    if (fanMessageConverter.getCommand() == clFanMessageConverter.PWM_SET) {
+
+                        rcvStream = (char) clResponseMessage.RES + "\n" + (char) clResponseMessage.SUCCESS + "\n" +
+                                (char) clFanMessageConverter.FAN_ID + "\n" + (char) clFanMessageConverter.PWM_SET +
+                                "" + (char) fanMessageConverter.getData() + "\n";
+                    }
+
+                }
+
+                Log.i(toString(), "Received Message: " + rcvStream);
+
+                clResponseMessage resMsg = new clResponseMessage();
+
+                resMsg.dissolveMessage(rcvStream);
+
+                taskList.remove(this);
+
+                MessageListener.onReceiveMessageEvent(resMsg);
+
+            } else {
+
+                taskList.remove(this);
+
             }
 
-            Log.i(toString(), "Received Message: " + rcvStream);
-
-            clResponseMessage resMsg=new clResponseMessage() ;
-
-            resMsg.dissolveMessage(rcvStream);
-
-            MessageListener.onReceiveMessageEvent(resMsg);
-
-            //startFlag=false ;
-            //	}
-            //	}
+            Log.i("taskList Size",Integer.toString(taskList.size())) ;
 
         }
 
 
 //code for real, do not erase
 
-        /*
+/*
         @Override
         public void run() {
 
@@ -320,71 +337,78 @@ public class clComManager{
 
                         Log.i(toString(), "Message Sent");
 
-                        byte ch;
-                        int timeoutCnt = 0;
-                        boolean responseReceived = false;
-                        //if timeout count has exceeded maximum count or
-                        //response message is received
+                        //if request message needs response message
+                        if(needRespMsgQueue.poll()) {
 
-                        while (timeoutCnt != timeout_count) {
+                            byte ch;
+                            int timeoutCnt = 0;
+                            boolean responseReceived = false;
+                            //if timeout count has exceeded maximum count or
+                            //response message is received
+
+                            while (timeoutCnt != timeout_count) {
+
+                                try {
+
+                                    Log.i(toString(), "enter receiving mode");
+                                    ch = diStream.readByte();//read one byte each time
+
+                                    Log.i(toString(), "Received Message: " + Byte.toString(ch));
+
+                                    if (ch == endChar) {
+                                        //set response receive flag true for indicating successful receiving response message
+                                        responseReceived = true;
+                                        Log.i(toString(), "End Char Received!!");
+                                        //disconnect after message is received
+                                        break;
+                                    } else {
+
+                                        //if it reached end of one string
+                                        rcvStream += (char) ch;
+                                    }
+
+                                } catch (Exception e) {
+
+                                    Log.e("Any exception", "Unknown exception occured");
+                                    timeoutCnt++;
+                                    break;
+                                }
+                            }
+
+                            //if got response message successfully
+                            disconnect();//disconnect socket
 
                             try {
+                                Thread.sleep(1000);
 
-                                Log.i(toString(), "enter receiving mode");
-                                ch = diStream.readByte();//read one byte each time
+                            } catch (InterruptedException e) {
 
-                                Log.i(toString(), "Received Message: " + Byte.toString(ch));
-
-                                if (ch == endChar) {
-                                    //set response receive flag true for indicating successful receiving response message
-                                    responseReceived = true;
-                                    Log.i(toString(), "End Char Received!!");
-                                    //disconnect after message is received
-                                    break;
-                                } else {
-
-                                    //if it reached end of one string
-                                    rcvStream += (char) ch;
-                                }
-
-                            } catch (Exception e) {
-
-                                Log.e("Any exception", "Unknown exception occured");
-                                timeoutCnt++;
-                                break;
                             }
-                        }
-
-                        //if got response message successfully
-                        disconnect();//disconnect socket
-
-                        try {
-                            Thread.sleep(1000);
-
-                        } catch (InterruptedException e) {
-
-                        }
 
 
-                        if (responseReceived) {
+                            if (responseReceived) {
 
-                            final clResponseMessage resMsg = new clResponseMessage();
+                                final clResponseMessage resMsg = new clResponseMessage();
 
-                            resMsg.dissolveMessage(rcvStream);
+                                resMsg.dissolveMessage(rcvStream);
 
-                            //create handler and post it on main looper for synchronizing with
-                            //dataprocessor that runs on main looper
+                                //create handler and post it on main looper for synchronizing with
+                                //dataprocessor that runs on main looper
 
-                            new Handler(Looper.getMainLooper()).post(new Runnable() {
+                                new Handler(Looper.getMainLooper()).post(new Runnable() {
 
-                                @Override
-                                public void run() {
+                                    @Override
+                                    public void run() {
 
-                                    MessageListener.onReceiveMessageEvent(resMsg);
-                                }
+                                        MessageListener.onReceiveMessageEvent(resMsg);
+                                    }
 
-                            });
+                                });
 
+                            }
+                        }else
+                        {
+                            disconnect() ;
                         }
 
 
@@ -405,8 +429,35 @@ public class clComManager{
                 Log.e(toString(), "No Ip Address Set");
             }
         }
+*/
 
-    */
+        private void disconnect(){
+
+            //do not erase
+            try {
+
+                if (devSocket != null) {
+
+                    devSocket.close();
+                    devSocket = null;
+
+                    Log.i(toString(), "Disconnecting and closing socket");
+                }
+
+            } catch (IOException e) {
+
+                Log.d(toString(), e.getMessage());
+                Log.i(toString(), "Disconnecting and closing socket failed");
+
+            } finally {
+
+                devSocket = null;
+
+                //remove this task from task thread on disconnection
+                taskList.remove(this) ;
+            }
+
+        }
     }
 
     /**

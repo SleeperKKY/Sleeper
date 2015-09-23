@@ -104,6 +104,8 @@ public class clAccelTempDataProcessor extends clDataProcessor implements clDataP
 		ComManager.setTimeoutUnit(5000);
 		ComManager.setTimeoutCount(2) ;
 
+        clComManager.setPort(2323) ;
+
 		//set database of dataprocessor to use onInsertDataSummaryTable
 		getDatabase().addListener(myDatabase);
 	}
@@ -126,7 +128,7 @@ public class clAccelTempDataProcessor extends clDataProcessor implements clDataP
         reqMsg.setDeviceMessage(fanMessageConverter.makeDeviceMessage());
 
         ComManager.connect() ;
-        ComManager.send(reqMsg);
+        ComManager.send(reqMsg,true);
 
 
 		super.measureStart();
@@ -344,7 +346,7 @@ public class clAccelTempDataProcessor extends clDataProcessor implements clDataP
 			reqMsg.setDeviceMessage(tempSensorMessageConverter.makeDeviceMessage());
 
 			ComManager.connect() ;
-			ComManager.send(reqMsg);
+			ComManager.send(reqMsg,true);
 
 		}
 	}
@@ -370,10 +372,9 @@ public class clAccelTempDataProcessor extends clDataProcessor implements clDataP
 		long time ;
 		int sleepLevelVal ;
 		double tempVal ;
-		Date to ;
 
 		int dataPointsIndex=0 ;
-        //double dataPointTime=0 ;//dataPoint time should be down
+
 		//search queries
 		while(myCursor.moveToNext()) {
 
@@ -388,8 +389,6 @@ public class clAccelTempDataProcessor extends clDataProcessor implements clDataP
 
 			dataPointsIndex++ ;
 		}
-
-		statManager.setDataSize(sleepLevelData.length);
 
 		//make graph
 		GraphView graph=new GraphView(AttachedContext) ;
@@ -430,7 +429,10 @@ public class clAccelTempDataProcessor extends clDataProcessor implements clDataP
 		graph.getSecondScale().addSeries(tempSeries) ;
 		graph.setTitle("Sleep Level & Temp") ;
 
-		statManager.addGraph(graph) ;
+        Log.i("Hello2",toString()) ;
+
+        //set length of graph
+		statManager.addGraph(graph,sleepLevelData.length) ;
 		//set time data
 		statManager.addXData(timeData) ;
 
@@ -541,7 +543,7 @@ public class clAccelTempDataProcessor extends clDataProcessor implements clDataP
                     Log.i("Fan send","Sending to fan") ;
 
 					ComManager.connect() ;
-                    ComManager.send(reqMsg);
+                    ComManager.send(reqMsg,true);
 
                 }
 

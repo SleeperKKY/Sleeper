@@ -104,6 +104,8 @@ public class clAccelTempDataProcessor extends clDataProcessor implements clDataP
 		ComManager.setTimeoutUnit(5000);
 		ComManager.setTimeoutCount(2) ;
 
+        clComManager.setPort(2323) ;
+
 		//set database of dataprocessor to use onInsertDataSummaryTable
 		getDatabase().addListener(myDatabase);
 	}
@@ -126,7 +128,7 @@ public class clAccelTempDataProcessor extends clDataProcessor implements clDataP
         reqMsg.setDeviceMessage(fanMessageConverter.makeDeviceMessage());
 
         ComManager.connect() ;
-        ComManager.send(reqMsg);
+        ComManager.send(reqMsg,true);
 
 
 		super.measureStart();
@@ -344,7 +346,7 @@ public class clAccelTempDataProcessor extends clDataProcessor implements clDataP
 			reqMsg.setDeviceMessage(tempSensorMessageConverter.makeDeviceMessage());
 
 			ComManager.connect() ;
-			ComManager.send(reqMsg);
+			ComManager.send(reqMsg,true);
 
 		}
 	}
@@ -541,7 +543,7 @@ public class clAccelTempDataProcessor extends clDataProcessor implements clDataP
                     Log.i("Fan send","Sending to fan") ;
 
 					ComManager.connect() ;
-                    ComManager.send(reqMsg);
+                    ComManager.send(reqMsg,true);
 
                 }
 

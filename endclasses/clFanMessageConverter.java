@@ -33,7 +33,6 @@ public class clFanMessageConverter extends clDeviceMessageConverter {
 
 	public clFanMessageConverter() {
 
-		//ID=clDeviceMessageConverter.FAN ;
 	}
 
 	@Override
@@ -47,13 +46,6 @@ public class clFanMessageConverter extends clDeviceMessageConverter {
 
 
 			switch (Command) {
-
-				//currently no data is required to send to remote device
-				/*
-				case TURN_OFF:
-					ControlInfo += TURN_OFF;
-					break;
-					*/
 
 				case PWM_SET:
 					ControlInfo +=(char)PWM_SET ;
