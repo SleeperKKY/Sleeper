@@ -109,5 +109,9 @@ Then if user(not developer) connects nearby device then app can get device's **s
  09.20.2015
   - Feature for practising svm and svm classification is changed from PIM(Propotional Integration Mode), intensity values(sqrt(x^2+y^2+z^2) of accelerometer) to FFT(Fast Fourier Transform) coefficients since value of PIM,
     intensity values are so dependent on type of accelerometer in various smart phone. We updated all files above to meet that change.
+	
  09.22.2015
   - Removed redundant code in clDatabaseManager in clDataProcessor and in StatisticSelectFragment.
+  
+ 09.23.2015
+  - Fixed clComManager bug that sharing same socket reference in multiple thread and keep changing reference at each new connection is made.
