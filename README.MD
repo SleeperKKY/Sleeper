@@ -96,6 +96,7 @@ endclasses package is where user implementation of device controlling mechanism 
 **clMyDatabaseManager**. **clAccelTempListener** extended **clDataProcessor** and implemented its own device controlling mechanism. Below is our example of custom-device-controlling algorithm.
 
 
+####Custom Remote Device Controlling Algorithm Example.
 ![UserApp Sleep Caring Algorithm](./README_IMG/UserApp_Sleep_Caring_Algorithm.jpg)
 
 
@@ -125,3 +126,10 @@ Then if user(not developer) connects nearby device then app can get device's **s
   
  09.23.2015
   - Fixed **clComManager** bug that sharing same socket reference in multiple thread and keep changing reference at each new connection is made.
+  
+ 09.27.2015
+  - Fixed error that occurs when measure is stopped. 
+  - Erased some redundant code in project java files and added comments to classes in package endclasses.
+  - Modified some code in propclasses, endclasses package.
+  - Changed System Overview image.
+  - Changed apk files to include latest update
