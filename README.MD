@@ -19,7 +19,9 @@ now since this is our first android app ever made. So we'd like to get advice to
 
 We separated library package, 'propclasses', and user implementation sample package, currently 'endclasses'. Propclasses consist
 of 'app_manager' package, 'communition_manager', 'dataprocessor_manager'. In order to use app, you have to put '**SvmFile**'
-folder above in your android phone's sd card. Just put it, then it is done.
+folder above in your android phone's sd card. Just put it, then it is done. **Sleeper_Test.apk** is apk for test, which doesn't need
+**SleeperDevice** and wifi connectivity to it. **Sleeper_Real.apk** is for people who made **SleeperDevice** and synchronized message
+parsing mechanism with *SleeperApp* application. 
 
 You can visit 'propclasses' package's javadoc in this link:![JavaDoc]http://sleeperkky.github.io/Sleeper
 
