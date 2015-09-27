@@ -30,7 +30,6 @@ import android.util.Log;
 
 import com.jjoe64.graphview.DefaultLabelFormatter;
 import com.jjoe64.graphview.GraphView;
-import com.jjoe64.graphview.helper.DateAsXAxisLabelFormatter;
 import com.jjoe64.graphview.series.BarGraphSeries;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
@@ -41,7 +40,6 @@ import org.androidtown.sleeper.propclasses.com_manager.clResponseMessage;
 import org.androidtown.sleeper.propclasses.dataprocessor_manager.clDataProcessor;
 import org.androidtown.sleeper.propclasses.dataprocessor_manager.clStatManager;
 
-import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.LinkedList;
@@ -87,7 +85,11 @@ public class clAccelTempDataProcessor extends clDataProcessor implements clDataP
 
 	//public clDataManager many tables;
 
-
+    /**
+     * Constructor
+     * @param context attached application context
+     * @param _ComManager communication manager object
+     */
 	public clAccelTempDataProcessor(Context context, clComManager _ComManager){
 
 		//must be called before doing anything
@@ -128,7 +130,7 @@ public class clAccelTempDataProcessor extends clDataProcessor implements clDataP
         reqMsg.setDeviceMessage(fanMessageConverter.makeDeviceMessage());
 
         ComManager.connect() ;
-        ComManager.send(reqMsg,true);
+        ComManager.send(reqMsg, true);
 
 
 		super.measureStart();
@@ -166,6 +168,14 @@ public class clAccelTempDataProcessor extends clDataProcessor implements clDataP
 		return INVALID ;
 	}
 
+    /**
+     * Analyse sleep state change
+     * @param currentSleepState current output from sleep state classifier
+     * @param prevSleepState previous sleep state output from sleep state classifier
+     * @param currentTemp current temperature retrieved from remote device
+     * @param prevPwm previous pwm of fan
+     * @return analysis result
+     */
     private int analyseSleepStateChange(int currentSleepState,int prevSleepState, double currentTemp, int prevPwm){
 
         //insert decision value into data manager
@@ -245,7 +255,6 @@ public class clAccelTempDataProcessor extends clDataProcessor implements clDataP
      * @param temp current temperature
      * @return cause of worsened sleep state: HIGH_WINDPOWER, LOW_WINDPOWER, WAITING
      */
-
     private int analyseWorsen(int worsenDegree, int prevPwm,double temp){
 
         int analysis=INVALID ;
@@ -314,7 +323,6 @@ public class clAccelTempDataProcessor extends clDataProcessor implements clDataP
 	public void onSleepStateRetrievedEvent(int sleepState, Double[] accelerometerValues) {
 
 		//put code to do something after retrieving intensity values
-
         switch(sleepState){
 
             case clSleepStageClassifier.AWAKE:
@@ -352,19 +360,20 @@ public class clAccelTempDataProcessor extends clDataProcessor implements clDataP
 	}
 
     /**
-     * Create statmanager at given row when click in StatisticManage Fragment
-     * @param rowPos row position of clicked item in listview
+     * Create statmanager object with given rowId of dataSummary table of clDataProcessor.clDatabaseManager
+     * @param rowId row id of clicked row of dataSummary table of clDataProcessor.clDatabaseManager
      * @return stat manager to draw graph
      */
 	@Override
-	public clStatManager createStatManager(int rowPos) {
+	public clStatManager createStatManager(int rowId) {
 
 		clStatManager statManager=new clStatManager() ;
 
 		//retrieve data from database
 		String[] colNames={clMyDatabaseManager.colTime,clMyDatabaseManager.colSleepLevel,clMyDatabaseManager.colTemp} ;
-		Cursor myCursor=myDatabase.selectTable(clMyDatabaseManager.dataTable+Integer.toString(rowPos), colNames, null, null) ;
+		Cursor myCursor=myDatabase.selectTable(clMyDatabaseManager.dataTable+Integer.toString(rowId), colNames, null, null) ;
 
+        //array of datapoints to be mapped into each series
 		DataPoint[] sleepLevelData=new DataPoint[myCursor.getCount()] ;
 		DataPoint[] tempData=new DataPoint[myCursor.getCount()] ;
 		double[] timeData=new double[myCursor.getCount()] ;
@@ -375,7 +384,7 @@ public class clAccelTempDataProcessor extends clDataProcessor implements clDataP
 
 		int dataPointsIndex=0 ;
 
-		//search queries
+		//collect data x value and y value you want to draw and form datapoints
 		while(myCursor.moveToNext()) {
 
 			//get time, temperature, sleep level
@@ -428,8 +437,6 @@ public class clAccelTempDataProcessor extends clDataProcessor implements clDataP
 		graph.addSeries(sleepLevelSeries);
 		graph.getSecondScale().addSeries(tempSeries) ;
 		graph.setTitle("Sleep Level & Temp") ;
-
-        Log.i("Hello2",toString()) ;
 
         //set length of graph
 		statManager.addGraph(graph,sleepLevelData.length) ;
@@ -494,7 +501,7 @@ public class clAccelTempDataProcessor extends clDataProcessor implements clDataP
 				cv.put(clMyDatabaseManager.colTemp,(byte)tempMessageConverter.getData()) ;
 				cv.put(clMyDatabaseManager.colDecisionValue,decidedCmd) ;
 
-				myDatabase.insertTable(clMyDatabaseManager.dataTable, null, cv) ;
+				myDatabase.insertTable(clMyDatabaseManager.dataTable+getDatabase().getLastRowId(), null, cv) ;
 
 				Log.i(toString(), "Decided Command: "+Integer.toString(decidedCmd));
 

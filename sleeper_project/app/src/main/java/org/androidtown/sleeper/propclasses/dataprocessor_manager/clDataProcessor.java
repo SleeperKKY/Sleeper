@@ -33,18 +33,13 @@ import android.hardware.SensorManager;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
-import android.util.Log;
 
 import org.androidtown.sleeper.propclasses.com_manager.clComManager;
 import org.jtransforms.fft.DoubleFFT_1D;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -55,15 +50,11 @@ import java.util.concurrent.CopyOnWriteArrayList;
  */
 public abstract class clDataProcessor implements clComManager.IMessageListener {
 
-    //protected int ID;
-    //public abstract void onEveryCalculateCompleteEvent();
     private clDataTimer DataTimer=null ;
     protected Context AttachedContext=null ;
     private boolean isRunning=false ;
     private clSleepStageClassifier sleepClassifier =null ;
     private clDatabaseManager Database=null ;
-
-   // protected clComManager ComManager=null ;
 
     /**
      * Constructor
@@ -72,7 +63,6 @@ public abstract class clDataProcessor implements clComManager.IMessageListener {
     protected clDataProcessor(Context context){
 
         DataTimer=clDataTimer.getInstance() ;
-        //sManager=(SensorManager)context.getSystemService(Context.SENSOR_SERVICE) ;
         //create sleep state classifier
         sleepClassifier =new clSleepStageClassifier(context) ;
         AttachedContext=context ;
@@ -109,7 +99,6 @@ public abstract class clDataProcessor implements clComManager.IMessageListener {
     public void measureStop(){
 
         DataTimer.stop() ;
-        //DataTimer.unregisterDataTimerListener(sleepStateClassifier);
         sleepClassifier.detach() ;
         isRunning=false ;
 
@@ -177,23 +166,11 @@ public abstract class clDataProcessor implements clComManager.IMessageListener {
    }
 
     /**
-     * Set user's own database manager. User should implement clDatabaseManager class and set instance
-     * of your own database manager.
-     * @param db database manager
+     * Create statmanager with given rowId when click in StatisticManage Fragment
+     * @param rowId row id of clicked row of dataSummary table of clDataProcessor
+     * @return stat manager to draw graph
      */
-    /*
-    protected void setDatabaseManager(clDatabaseManager db){
-
-        Database=db ;
-    }
-    */
-
-    /**
-     *
-     * @param position
-     * @return
-     */
-    public abstract clStatManager createStatManager(int position) ;
+    public abstract clStatManager createStatManager(int rowId) ;
 
     /**
      * Get database manager
@@ -212,16 +189,9 @@ public abstract class clDataProcessor implements clComManager.IMessageListener {
         private List<ISleepStateListener> sleepStateListnerList;
         private List<Double> intensityList;
         //intensity array to avoid being incremented while calculate
-        private List<double[]> fftMagnitudeList;
-        //private float filtered_intensity;
-        //private static final double lowpass_thr=2.5;
-        //private static final double lowpass_dim=5;
-        private static final double Intensity_Stddev_Thresh =4;
-        //private static final double ZCM_Thresh=0.15 ;
-        //private static final double SMALL_MOVEMENT=0.16 ;
-       // private static final double LARGE_MOVEMENT=0.25 ;
-        //private static final double LPF_WEIGHT=0.5 ;
-        private static final int FFTBinSize =5 ;
+
+        //to remove sensor noise
+        private static final double Intensity_dev_Thresh =4;
         //intensity retrieve preiod in micro second
         private static final int IntensityValueRetrievePeriod =50 ;
         private static final long SleepStateRetrievePeriod=60000 ;
@@ -232,27 +202,24 @@ public abstract class clDataProcessor implements clComManager.IMessageListener {
         private static final String svmFilePath=Environment.getExternalStorageDirectory()+"/SvmFile" ;
         private static final String svmModelFilename="model" ;
         private static final String svmlibName="svmLib" ;
-        // private static final String SvmTrainingFilename="train_set" ;
 
         //calculate fft feature at every 2 second, sleeptype classify at every 1 minute
-        //private IDataTimerListener CalcFFTFeature=null ;
         private clDataTimer.IDataTimerListener ClassifySleepType=null ;
 
         private Context AttachedContext=null ;
 
-        private double pim;
-        //private double zcm;
-        private double IntensityAvg ;
+        //fft feature containser
+        private List<double[]> fftMagnitudeList;
         private double[] fft_stddiv;
         private double[] fft_max;
-        private int resultSleepState=-1 ;
-       // private int intensityArrayLength=0 ;
-        //private int smallMovementCnt=0 ;
-       // private int largeMovementCnt=0 ;
-        //private int slightMovementCnt=0 ;
+        private static final int FFTBinSize =5 ;
+
+        //sleep state
         public static final int AWAKE = 2 ;
         public static final int REM = 1;
         public static final int DEEP = 0 ;
+
+        private int resultSleepState=-1 ;
 
         //private int intensityList_offset=0 ;
         private SensorEventListener sensorEventListener=null ;
@@ -288,7 +255,6 @@ public abstract class clDataProcessor implements clComManager.IMessageListener {
 
             double avg=0.0 ;
             double sum=0 ;
-            double sumP2=0 ;
             double intensityValue=0 ;
             double intensityListSize=intensityArray.length ;
             //double std_deviation=0.0 ;
@@ -297,114 +263,18 @@ public abstract class clDataProcessor implements clComManager.IMessageListener {
             {
                 intensityValue=intensityArray[i];
 
-                sumP2=Math.pow(intensityValue,2) ;
                 sum+=intensityValue ;
             }
 
             avg=sum/intensityListSize ;
 
-            //calculate standard deviation
-            //std_deviation=Math.sqrt(sumP2/intensityListSize-Math.pow(avg,2)) ;
-
-
             //remove noise between intensities if deviation is higher than standard deviation
             for(int i=0;i<intensityListSize;i++)
             {
-                if(Math.abs(intensityArray[i]-avg)> clSleepStageClassifier.Intensity_Stddev_Thresh)
+                if(Math.abs(intensityArray[i]-avg)> clSleepStageClassifier.Intensity_dev_Thresh)
                     intensityArray[i]=0.0 ;
             }
 
-        }
-
-        /**
-         * Performed at every one minute. Perform low-pass-filter on intensity values and replace elements
-         * in intensity array.
-         *
-         * Deprecated since we already perform low-pass-filter like pre-processing when getting sensor
-         * value. So intentsityArray is already filtered.
-         * @param intensityArray intensity array to remove outlier
-         * */
-        /*
-        @Deprecated
-        private void removeOutlier(Double[] intensityArray) {
-
-            //apply low pass filter concept
-            double prevValue=0 ;
-            double currentValue ;
-
-            for(int i=0;i<intensityArray.length;i++){
-
-                currentValue=intensityArray[i] ;
-
-                intensityArray[i]=prevValue-LPF_WEIGHT*(currentValue-prevValue) ;
-
-                prevValue=intensityArray[i] ;
-            }
-
-        }
-        */
-
-
-        /**
-         * Performed at every one minute. Calculate sum of filtered intensity values.
-         * @param intensityArray intensity array to calculate pim value.
-         */
-        private void estimatePIM(Double[] intensityArray) {
-
-            pim=0 ;
-            for(int i=0;i<intensityArray.length;i++)
-                pim+=intensityArray[i] ;
-        }
-
-        /**
-         * Performed at every one minute. Calculate count of zero crossing mode by using difference equation
-         * on filtered intensity values.
-         *
-         * Deprecated since there is no zero crossing between intensity values since we treate x^2+y^2+z^2
-         * value of accelerometer. And after we observed difference of this value between each sleep stage,
-         * there was not much difference so we removed this feature. Maybe there's some mistake when we
-         * calculate this feature and we will keep looking into it.
-         * @param intensityArray intensity to get zcm value
-         */
-        /*
-        @Deprecated
-        private void estimateZCM(Double[] intensityArray) {
-
-            zcm =0 ;
-            double diff ;
-            for(int i=1;i<intensityArray.length;i++){
-
-                //get current sign of differnce of i,i-1 value
-                diff=intensityArray[i]-intensityArray[i-1] ;
-
-                //if 0 crossing occur
-                if(Math.abs(diff)>ZCM_Thresh)
-                {
-                    zcm++ ;
-                }
-
-                //update prevDiffSign to current one
-                //prevDiffSign=currentDiffSign ;
-            }
-        }
-        */
-
-        /**
-         * Calculated every one minute. Estimate average of intensity values gathered for 1 minute.
-         *
-         * @param intensityArray intensity array to calculate average.
-         */
-        private void estimateIntensityAvg(Double[] intensityArray){
-
-            IntensityAvg = 0;
-
-            //calculate intensity average and store in file
-            for (int i = 0; i < intensityArray.length; i++) {
-                IntensityAvg += intensityArray[i];
-            }
-            IntensityAvg/=intensityArray.length ;
-
-            Log.i("Intensity Average:", Double.toString(IntensityAvg)) ;
         }
 
 
@@ -421,22 +291,6 @@ public abstract class clDataProcessor implements clComManager.IMessageListener {
 
         }
 
-
-        /**
-         * inverse fourier-transformed data
-         * @return double type inverse data
-         */
-        /*
-        @Deprecated
-        private void calcIFFT(double[] toifft){
-
-            DoubleFFT_1D doubleFFT_1D = new DoubleFFT_1D(toifft.length) ;
-
-            doubleFFT_1D.realInverse(toifft, false);
-        }
-        */
-
-
         /**
          * calculated every 2 second
          *
@@ -452,7 +306,7 @@ public abstract class clDataProcessor implements clComManager.IMessageListener {
 
             calcFFT(tofft) ;
 
-            double magnitude=0.0 ;
+            double magnitude ;
             //int magnitudeArraySize = FFTBinSize ;
             double[] magnitudeArray=new double[FFTBinSize] ;
             int incrementBy=(int)Math.ceil((double)(end-start)/FFTBinSize) ;
@@ -482,7 +336,6 @@ public abstract class clDataProcessor implements clComManager.IMessageListener {
             double sumP2=0 ;
             double magnitude=0 ;
             int fftMagnitudeListSize=fftMagnitudeList.size() ;
-            double[] eachMagnitudeArray=null ;
             double std_deviation=0.0 ;
             double maxCoefficient=0 ;
 
@@ -534,8 +387,6 @@ public abstract class clDataProcessor implements clComManager.IMessageListener {
             int fftFrameSize=intensityArray.length/(int)(SleepStateRetrievePeriod/FFTFeatureSampleRetrievePeriod) ;
             int i=0 ;
 
-            //Log.i("intensityArraySize",Integer.toString(intensityArray.length)) ;
-            //Log.i("fftFrameSize",Integer.toString(fftFrameSize)) ;
             //coordinate intensity length, discard ramaning after dividing with fftFrameSize
             int fftLength=intensityArray.length-(intensityArray.length%fftFrameSize) ;
 
@@ -545,8 +396,6 @@ public abstract class clDataProcessor implements clComManager.IMessageListener {
             for(i=0;i<fftLength;i+=fftFrameSize)
             {
                 calcFFTFeature(intensityArray, i, i + fftFrameSize);
-               // Log.i("real fftFrameSize", Integer.toString(i)) ;
-
             }
 
             //estimate fft sigma max feature
@@ -568,28 +417,6 @@ public abstract class clDataProcessor implements clComManager.IMessageListener {
             double[] probs = new double[4];
             int isProb = 0; // Not probability prediction
 
-
-            //put features into vector
-            //values[0][0]=IntensityAvg ;
-            //indices[0][0]=1 ;
-            //values[0][1]=pim ;
-            //indices[0][1]=2 ;
-
-
-            //values[0][22]=IntensityAvg ;
-            //indices[0][22]=23 ;
-
-
-            /*
-            for(int i=0;i<FFTBinSize*2;i+=2){
-
-                values[0][i+2]=fft_stddiv[i/2] ;
-                indices[0][(i)+2]=(i+1)+2 ;
-                values[0][(i+1)+2]=fft_max[i/2] ;
-                indices[0][(i+1)+2]=(i+2)+2 ;
-            }
-            */
-
             for(int i=0;i<FFTBinSize*2;i+=2){
 
                 values[0][i]=fft_stddiv[i/2] ;
@@ -598,19 +425,6 @@ public abstract class clDataProcessor implements clComManager.IMessageListener {
                 indices[0][(i+1)]=(i+2) ;
             }
 
-
-
-            /*
-            String feature="" ;
-            for(int i=0;i<feature_value_length;i++)
-            {
-                feature+=Double.toString(values[0][i]) ;
-                feature+=" " ;
-            }
-
-            Log.i("Calculated Feature: ",feature) ;
-
-            */
             doClassificationNative(values, indices, isProb, svmFilePath + "/" + svmModelFilename, labels, probs) ;
 
             return labels[0] ;
@@ -638,17 +452,9 @@ public abstract class clDataProcessor implements clComManager.IMessageListener {
                     //remove sensor noise
                     removeSensorNoise(intensityArray);
 
-                    //estimate pim
-                    estimatePIM(intensityArray);
-
                     estimateFFTFeature(intensityArray);
 
-
-                    estimateIntensityAvg(intensityArray);
-
                     resultSleepState=classify() ;
-
-                    makeResultFile(intensityArray);
                     //classify sleep type from pim, zcm, fft feature
 
                     for (final ISleepStateListener listener : sleepStateListnerList) {
@@ -676,7 +482,6 @@ public abstract class clDataProcessor implements clComManager.IMessageListener {
 
             SensorManager sManager=(SensorManager)AttachedContext.getSystemService(Context.SENSOR_SERVICE) ;
             Sensor sensor=sManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION) ;
-            //DataTimer.registerDataTimerListener(CalcFFTFeature,FFTFeatureSampleRetrievePeriod) ;
 
             clDataTimer.getInstance().registerDataTimerListener(ClassifySleepType, SleepStateRetrievePeriod) ;
 
@@ -720,7 +525,6 @@ public abstract class clDataProcessor implements clComManager.IMessageListener {
          */
         private void detach(){
 
-           // DataTimer.unregisterDataTimerListener(CalcFFTFeature);
             clDataTimer.getInstance().unregisterDataTimerListener(ClassifySleepType);
 
             SensorManager sManager=(SensorManager)AttachedContext.getSystemService(Context.SENSOR_SERVICE) ;
@@ -742,82 +546,7 @@ public abstract class clDataProcessor implements clComManager.IMessageListener {
 
             //set all properties in fft_stddiv, fft_max to zero
             Arrays.fill(fft_stddiv,0);
-            Arrays.fill(fft_max,0) ;
-        }
-
-        /**
-         * Make result file after extracting each feature.
-         *
-         * This is for test code. When people use this class, this method will be removed.
-         * @param intensityArray
-         */
-        private void makeResultFile(Double[] intensityArray) {
-
-            File file = null;
-
-            boolean isSuccess = false;
-
-            File dir = new File(dirPath);
-            //if directory not exists
-            if (!dir.exists())
-                dir.mkdir();
-
-            file = new File(dirPath +"/"+ finename);
-
-            try {
-
-                FileOutputStream fos;
-                fos = new FileOutputStream(file,true);
-
-                //if file not exists
-                if(!file.exists()) {
-                    isSuccess = file.createNewFile();
-                }
-
-                SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
-
-                try {
-
-                    //write storing time
-                    fos.write((dateFormat.format(System.currentTimeMillis()) + "   ").getBytes());
-
-                    //calculate intensity average and store in file
-                    fos.write((Double.toString(IntensityAvg)+"   ").getBytes()) ;
-
-                    fos.write((Integer.toString(intensityArray.length)+"   ").getBytes()) ;
-
-                    fos.write((Integer.toString(resultSleepState)+"   ").getBytes()) ;
-
-                    //write pim value
-                    fos.write((Double.toString(pim) + "   ").getBytes());
-
-                    //write zcm value
-                    //fos.write((Double.toString(zcm) + "   ").getBytes());
-
-                    //write move count of each level
-                    //fos.write((Integer.toString(slightMovementCnt)+" "+Integer.toString(smallMovementCnt)+" "+Integer.toString(largeMovementCnt)+" ").getBytes()) ;
-
-                    //write fft value, interleaving between fft_stddiv, fft_max
-                    //length of both array is same
-
-
-                    for (int i = 0; i < fft_stddiv.length; i++) {
-                        fos.write((Double.toString(fft_stddiv[i]) + " ").getBytes());
-                        fos.write((Double.toString(fft_max[i]) + " ").getBytes());
-                    }
-
-                    fos.write("\n".getBytes());
-
-                    fos.flush();
-                    fos.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
+            Arrays.fill(fft_max, 0) ;
         }
 
         /**
@@ -871,7 +600,7 @@ public abstract class clDataProcessor implements clComManager.IMessageListener {
         public static final String colEndTime="EndTime" ;//@@@
 
         private List<IDbChangeListener> listenerList=null ;
-        private  int count ;
+        private  int lastRowId;
 
         /**
          * Constructor
@@ -916,10 +645,10 @@ public abstract class clDataProcessor implements clComManager.IMessageListener {
 
             if(cursor.moveToFirst())//if query fails, when there is no column made in dataTable_summary
             {
-                count = cursor.getInt(0) ;
+                lastRowId = cursor.getInt(0) ;
             }
             else
-                count=0;
+                lastRowId =0;
         }
 
         /**
@@ -947,6 +676,11 @@ public abstract class clDataProcessor implements clComManager.IMessageListener {
             }
         }
 
+        public int getLastRowId(){
+
+            return lastRowId ;
+        }
+
         /**
          * Insert into Datatable_Summary table
          * @param cv content values to put in new row of datatable summary table
@@ -955,15 +689,15 @@ public abstract class clDataProcessor implements clComManager.IMessageListener {
 
             SQLiteDatabase db=this.getWritableDatabase() ;
 
-            count++ ;//increment count since count indicate current end row of table
+            lastRowId++ ;//increment count since count indicate current end row of table
 
-            cv.put(colCnt, count) ;//put incremented count
+            cv.put(colCnt, lastRowId) ;//put incremented count
             db.insert(clDatabaseManager.summarydataTable, null, cv) ;
 
             //increment count after inserting new row into datatable summary table
 
             for(IDbChangeListener listener : listenerList)
-                listener.onInsertSummaryTable(count);
+                listener.onInsertSummaryTable(lastRowId);
 
             db.close() ;
         }

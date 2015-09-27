@@ -33,14 +33,9 @@ package org.androidtown.sleeper.propclasses.com_manager;
  * device to respond.
  */
 public abstract class clDeviceMessageConverter {
-	/*
-	protected static char ID;
-	public static final char TEMP = 0x10;
-	public static final char FAN = 0x20 ;
-	*/
+
 	protected byte Command ;
 	protected byte data ;
-	//protected boolean DataNeed=false ;
 
     /**
      * Make device message
@@ -53,7 +48,6 @@ public abstract class clDeviceMessageConverter {
      * @param _ResControlInfo device message to be dissolved
      */
 	public abstract void dissolveDeviceMessage(String _ResControlInfo) ;
-
 	/**
 	 * Get command from device message
 	 */
@@ -61,14 +55,6 @@ public abstract class clDeviceMessageConverter {
 
 		return Command ;
 	}
-
-	/*
-	public void SetDataNeed(boolean tf){
-
-		DataNeed=tf ;
-	}
-*/
-
 	/**
 	 * Set command in device message to send
 	 * @param _Command command to send
@@ -77,9 +63,6 @@ public abstract class clDeviceMessageConverter {
 
 		Command=_Command ;
 	}
-
-
-
 	/**
 	 * Get data from received device message
 	 * @return data received from device message
@@ -88,9 +71,6 @@ public abstract class clDeviceMessageConverter {
 
 		return data ;
 	}
-
-
-
 	/**
 	 * Set data in device message
 	 * @param _data data to send
@@ -99,24 +79,4 @@ public abstract class clDeviceMessageConverter {
 
 		data=_data;
 	}
-
-	/*
-	public boolean equals(Object _Device) {
-
-		clDeviceMessageConverter dmc=(clDeviceMessageConverter)_Device ;
-
-		if(dmc.GetID()==ID){
-
-			return true ;
-		}
-
-		return false ;
-	}
-*/
-	/*
-	public char GetID(){
-
-		return ID ;
-	}
-	*/
 }

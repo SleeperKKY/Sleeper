@@ -34,6 +34,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -59,7 +60,6 @@ public class clComManager{
 	private static InetAddress ipAddr=null ;
 	private static int timeout_unit =10000 ;
 	private static int timeout_count =2 ;
-	//private Socket devSocket=null ;
 
     private byte endChar=126 ;
 
@@ -120,7 +120,6 @@ public class clComManager{
 	public static void setIpAddr(InetAddress _ipAddr){
 
 		ipAddr=_ipAddr ;
-        Log.i("Wifi Host IP", _ipAddr.getHostAddress()) ;
 	}
 
 
@@ -163,11 +162,7 @@ public class clComManager{
         //add task to list
         taskList.add(task) ;
 
-        Log.i("taskList Size", Integer.toString(taskList.size())) ;
-
         new Thread(task).start();
-
-        //Log.i(null,"Thread started!!") ;
     }
 
 	/**
@@ -178,13 +173,12 @@ public class clComManager{
 	 */
 	public void disconnect(){
 
-			//do not erase
-        int taskSize= taskList.size() ;
+        //do not erase
+        synchronized (taskList) {
 
-        //disconnect all running task
-        for(int i=0;i<taskSize;i++){
+            for(int i=0;i<taskList.size();i++)
+                taskList.remove(i).disconnect();
 
-            taskList.remove(i).disconnect() ;
         }
 
 	}
@@ -206,12 +200,10 @@ public class clComManager{
 
         private Socket devSocket=null ;
 
-        //code for testing message translating, do not erase
 
+        //code for testing message translating, do not erase
         @Override
         public void run() {
-
-            //
 
             clRequestMessage reqMsg = null;
 
@@ -222,9 +214,13 @@ public class clComManager{
             //if (!reqMsgQueue.isEmpty()) {
 
             reqMsg = reqMsgQueue.poll();
+
+            byte[] reqMessageString=reqMsg.makeMessage().getBytes() ;
             Log.i(toString(), "Req: " + reqMsg.makeMessage());
             Log.i(toString(), "Req ControlInfo: " + reqMsg.getDeviceMessage());
             Log.i(toString(), "Message Sent");
+
+            Log.i("end of byte",Byte.toString(reqMessageString[reqMessageString.length-1])) ;
 
 
             //wait for 500 millisecond for receiving
@@ -277,13 +273,11 @@ public class clComManager{
 
             }
 
-            Log.i("taskList Size",Integer.toString(taskList.size())) ;
-
         }
 
 
-//code for real, do not erase
 
+//code for real, do not erase
 /*
         @Override
         public void run() {
@@ -296,10 +290,6 @@ public class clComManager{
                     devSocket = new Socket(ipAddr, port);
                     devSocket.setSoTimeout(timeout_unit);
 
-                    //tempStartFlag =true ;
-
-                    Log.i("Connected ip", ipAddr.getHostAddress());
-
                     //use input stream, output stream of created socket
                     try {
                         diStream = new DataInputStream(devSocket.getInputStream());
@@ -308,7 +298,7 @@ public class clComManager{
                     } catch (IOException e) {
 
                         Log.e(toString(), e.getMessage());
-                        Log.i(toString(), "Error creating input, output stream");
+                        Log.e(toString(), "Error creating input, output stream");
                     }
 
                     //while devSocket is alive and not closed
@@ -322,20 +312,10 @@ public class clComManager{
                     reqMsg = reqMsgQueue.poll();
 
                     try {
-                        Log.i(toString(), "Req: " + reqMsg.makeMessage());
-                        Log.i(toString(), "Req ControlInfo: " + reqMsg.getDeviceMessage());
-
                         byte[] bytes = reqMsg.makeMessage().getBytes();
-
-                        for (int i = 0; i < bytes.length; i++) {
-
-                            Log.i("Req bytes", Byte.toString(bytes[i]) + " ");
-                        }
 
                         //doStream.writeChars(reqMsg.makeMessage());
                         doStream.write(reqMsg.makeMessage().getBytes());
-
-                        Log.i(toString(), "Message Sent");
 
                         //if request message needs response message
                         if(needRespMsgQueue.poll()) {
@@ -350,15 +330,11 @@ public class clComManager{
 
                                 try {
 
-                                    Log.i(toString(), "enter receiving mode");
                                     ch = diStream.readByte();//read one byte each time
-
-                                    Log.i(toString(), "Received Message: " + Byte.toString(ch));
 
                                     if (ch == endChar) {
                                         //set response receive flag true for indicating successful receiving response message
                                         responseReceived = true;
-                                        Log.i(toString(), "End Char Received!!");
                                         //disconnect after message is received
                                         break;
                                     } else {
@@ -371,7 +347,6 @@ public class clComManager{
 
                                     Log.e("Any exception", "Unknown exception occured");
                                     timeoutCnt++;
-                                    break;
                                 }
                             }
 
@@ -393,8 +368,7 @@ public class clComManager{
                                 resMsg.dissolveMessage(rcvStream);
 
                                 //create handler and post it on main looper for synchronizing with
-                                //dataprocessor that runs on main looper
-
+                                //main looper
                                 new Handler(Looper.getMainLooper()).post(new Runnable() {
 
                                     @Override
@@ -446,8 +420,8 @@ public class clComManager{
 
             } catch (IOException e) {
 
-                Log.d(toString(), e.getMessage());
-                Log.i(toString(), "Disconnecting and closing socket failed");
+                Log.e(toString(), e.getMessage());
+                Log.e(toString(), "Disconnecting and closing socket failed");
 
             } finally {
 

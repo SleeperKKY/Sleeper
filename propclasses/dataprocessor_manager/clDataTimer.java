@@ -46,22 +46,17 @@ public class clDataTimer {
 	private List<IDataTimerListener> dataTimerListenerList ;
 	private List<Long> dataTimerListenerPeriodList ;
 	private long[] dataTimerListenerPeriodCheckList ;
-	//private Context AttachedContext=null ;
 	private boolean isRunning=false ;
     private long minimumRequiredPeriod ;
 
 
 	private TimerTask RepeatTask ;
 	private Timer RepeatTimer ;
-	private int count=0 ;
 
-	private AlarmReceiver alarmReceiver=null ;
     private PowerManager.WakeLock wakelock=null ;
 
 	private Intent intent=null ;
 	private PendingIntent pIntent=null ;
-	private AlarmManager alarmManager=null ;
-	private static String DATATIMER_ACTION_ALARM_REPEAT="DATATIMER_ACTION_ALARM_REPEAT" ;
 
 	private boolean isRegistered=false ;
 
@@ -74,7 +69,6 @@ public class clDataTimer {
 
 		dataTimerListenerList=new ArrayList<>() ;
 		dataTimerListenerPeriodList=new ArrayList<>() ;
-		//AttachedContext=context ;
 	}
 
     /**
@@ -144,8 +138,6 @@ public class clDataTimer {
 			@Override
 			public void run() {
 
-                //Log.i(toString(), "dTimerListener Running");
-
                 for (int i = 0; i < dataTimerListenerPeriodList.size(); i++) {
                     //check if current count matches certain listener's event time
                     if (dataTimerListenerPeriodList.get(i) == dataTimerListenerPeriodCheckList[i]) {
@@ -166,24 +158,6 @@ public class clDataTimer {
 		//start task
 		RepeatTimer.schedule(RepeatTask, 0, minimumRequiredPeriod) ;
 
-
-		//register repeating alarm receiver
-/*
-		if(!isRegistered) {
-			IntentFilter filter=new IntentFilter(DATATIMER_ACTION_ALARM_REPEAT) ;
-			alarmReceiver=new AlarmReceiver() ;
-			AttachedContext.registerReceiver(alarmReceiver, filter);
-
-			//create alarm receiver
-			intent=new Intent(DATATIMER_ACTION_ALARM_REPEAT) ;
-			pIntent=PendingIntent.getBroadcast(AttachedContext,0,intent,PendingIntent.FLAG_CANCEL_CURRENT) ;
-			alarmManager=(AlarmManager)AttachedContext.getSystemService(Context.ALARM_SERVICE) ;
-			alarmManager.setExact(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), pIntent) ;
-
-			isRegistered=true ;
-		}
-		*/
-
 		isRunning=true ;
 	}
 
@@ -195,17 +169,6 @@ public class clDataTimer {
 		//cancel measuring task
 		RepeatTimer.cancel() ;
 
-		//Log.i(toString(), "dTimerListener Stopped") ;
-
-
-/*
-		if(isRegistered) {
-			alarmManager.cancel(pIntent);
-			AttachedContext.unregisterReceiver(alarmReceiver);
-
-			isRegistered=false ;
-		}
-*/
 		isRunning=false ;
 
 		dataTimerListenerPeriodCheckList=null ;
@@ -281,51 +244,6 @@ public class clDataTimer {
 		}
 
 		return array[array.length-1] ;
-	}
-
-
-	@Deprecated
-	private class AlarmReceiver extends BroadcastReceiver {
-
-
-		@Override
-		public void onReceive(Context context, Intent intent) {
-
-            //get wakelock
-			/*
-            PowerManager powerManager = (PowerManager) AttachedContext.getSystemService(Context.POWER_SERVICE);
-            wakelock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,
-                    "MyWakelockTag");
-            wakelock.acquire() ;
-            */
-
-            if(intent.getAction().equals(DATATIMER_ACTION_ALARM_REPEAT)){
-
-                Log.i("dtimer alarm", "repeat");
-                // This is the Intent to deliver to our service.
-                // Intent service = new Intent(context, AlarmService.class);
-
-                //do stuff
-
-                    for (int i = 0; i < dataTimerListenerPeriodList.size(); i++) {
-
-                        //check if current count matches certain listener's event time
-                        if (dataTimerListenerPeriodList.get(i) == dataTimerListenerPeriodCheckList[i]) {
-                            dataTimerListenerList.get(i).onEveryElapseEvent();
-                            dataTimerListenerPeriodCheckList[i] = 1;
-                        } else
-                            dataTimerListenerPeriodCheckList[i]++;
-
-                    }
-                    // Start the service, keeping the device awake while it is launching.
-                    //startWakefulService(context,service) ;
-
-                alarmManager.setExact(AlarmManager.RTC_WAKEUP,System.currentTimeMillis()+minimumRequiredPeriod,pIntent) ;
-            }
-
-            //wakelock.release() ;
-
-		}
 	}
 
 	public interface IDataTimerListener {

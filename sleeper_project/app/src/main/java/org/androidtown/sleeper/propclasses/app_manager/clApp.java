@@ -254,7 +254,7 @@ public class clApp{
 
 			} catch (Exception e) {
 
-				Log.i(toString(), e.getMessage());
+				Log.e(toString(), e.getMessage());
 			}
 
 		}

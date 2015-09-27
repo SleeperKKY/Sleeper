@@ -19,6 +19,12 @@ import android.util.Log;
 
 import org.androidtown.sleeper.propclasses.dataprocessor_manager.clDataProcessor;
 
+/**
+ * User defined database manage class. It should not directly manipulate SQLiteDatabase object. All
+ * user's database manage class should implement clDataProcessor.clDatabaseManager.IDbChangeListener
+ * and get SQLiteDatabase object by overriding setDB method. And user defined database manager should
+ * only manipulate update, insert, delete when
+ */
 public class clMyDatabaseManager implements clDataProcessor.clDatabaseManager.IDbChangeListener {
 
 	//static final String separator="_" ;
@@ -28,8 +34,6 @@ public class clMyDatabaseManager implements clDataProcessor.clDatabaseManager.ID
 	public static final String colTime ="Time";
 	public static final String colDecisionValue="DecisionValue" ;
 
-	private  int count ;
-
 	public static final String colSleepLevel ="SleepLevel";
 
 	//public static final String viewEmps="ViewEmps";
@@ -37,23 +41,35 @@ public class clMyDatabaseManager implements clDataProcessor.clDatabaseManager.ID
 	private SQLiteOpenHelper parentDBHelper=null ;
 
 
+    /**
+     * Get SQLiteOpenHelper of parent class. User should get db helper object from this method.
+     * @param parentDBHelper parent class' db heleper
+     */
 	@Override
 	public void setDB(SQLiteOpenHelper parentDBHelper) {
 
         this.parentDBHelper=parentDBHelper ;
 	}
 
+    /**
+     * Insert into certain user's table
+     * @param tableName table name to insert content values.
+     * @param nullColHack
+     * @param cv content values
+     */
 	public void insertTable(String tableName, String nullColHack, ContentValues cv) {
-
-
-		if(tableName.equals(dataTable)) {
-			tableName = tableName + Integer.toString(count);
-		}
 
         parentDBHelper.getWritableDatabase().insert(tableName, nullColHack, cv) ;
 	}
 
-    synchronized
+    /**
+     * Select query on certain table.
+     * @param tableName name of table to give select query
+     * @param columnNames certain column names to pick
+     * @param where where clause
+     * @param whereArgs where alguments
+     * @return cursor result of select query
+     */
     public Cursor selectTable(String tableName, String[] columnNames, String where, String[] whereArgs){
 
         Cursor cur= parentDBHelper.getWritableDatabase().query(tableName, columnNames, where, whereArgs, null, null, null) ;
@@ -61,6 +77,14 @@ public class clMyDatabaseManager implements clDataProcessor.clDatabaseManager.ID
         return cur ;
     }
 
+    /**
+     * Called when insertion occurred on clDataProcessor.clDataManager's dataSummaryTable
+     * If there's insertion on dataSummaryTable, it means new measurement is started. You
+     * almost certainly create create new table of your own for this measurement session.
+     * So you should create table here with given rowIndex of row to be inserted on
+     * clDataProcessor.clDataManager's dataSummaryTable.
+     * @param rowIndex row index of inserted row in dataSummaryTable.
+     */
 	@Override
 	public void onInsertSummaryTable(int rowIndex)
 	{
@@ -73,17 +97,20 @@ public class clMyDatabaseManager implements clDataProcessor.clDatabaseManager.ID
                 colTime + " INTEGER, " + colSleepLevel + " INTEGER, " + colTemp + " INTEGER, " +
                 colDecisionValue + " INTEGER)") ;
 
-		count=rowIndex ;
-
         db.close() ;
 	}
 
+    /**
+     * Called when 1 row deletion occurred on clDataProcessor.clDataManager's dataSummaryTable.
+     * If there's deletion on dataSummaryTable, it measurement result of certain session is deleted.
+     * You almost certainly  delete table of that measurement session. So you should delete table here
+     * with given rowIndex of row to be deleted on clDataProcessor.clDataManager's dataSummaryTable.
+     * @param rowIndex
+     */
 	@Override
 	public void onDeleteSummaryTable(int rowIndex) {
 
         parentDBHelper.getWritableDatabase().execSQL("DROP TABLE IF EXISTS " + dataTable + Integer.toString(rowIndex)) ;
-
-		count=rowIndex ;
 
 	}
 }

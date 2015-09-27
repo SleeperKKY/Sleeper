@@ -25,6 +25,10 @@ import android.util.Log;
 
 import org.androidtown.sleeper.propclasses.com_manager.clDeviceMessageConverter;
 
+/**
+ * Make and dissolve custom  message. This is example of how developer of SleeperDevice should
+ * make message parser class using clComManager.clDeviceMessageConverter class.
+ */
 public class clTempSensorMessageConverter extends clDeviceMessageConverter {
 
 	public static final byte TEMP_ID =0x10 ;
@@ -60,9 +64,6 @@ public class clTempSensorMessageConverter extends clDeviceMessageConverter {
 
 		this.Command=(byte)(_ControlInfo.charAt(0)) ;
 		this.data=(byte)(_ControlInfo.charAt(1)) ;
-
-		Log.i("Device command",""+_ControlInfo.charAt(0)) ;
-		Log.i("Device data",""+_ControlInfo.charAt(1)) ;
 
 
 		/*

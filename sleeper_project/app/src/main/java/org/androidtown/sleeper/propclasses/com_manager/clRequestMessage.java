@@ -45,15 +45,6 @@ public class clRequestMessage extends clMessage {
 
         String reqMsg= (char)REQ+"\n"+(char)DeviceID+"\n"+devMsg+"\n" ;
 
-        /*
-        byte[] bytes ;
-        Log.i(toString(),"Header: "+(int)Header) ;
-        Log.i(toString(),"Device ID: "+(int)DeviceID) ;
-        bytes=ControlInfo.getBytes() ;
-        Log.i(toString(),"ControlInfo: "+bytes[0]) ;
-        Log.i(toString(),"req msg Length: "+reqMsg.length());
-        */
-
         return reqMsg ;
     }
 
@@ -61,12 +52,8 @@ public class clRequestMessage extends clMessage {
     @Override
     public void dissolveMessage(String message){
 
-        clRequestMessage reqMsg=new clRequestMessage() ;
-
         setDeviceID((byte)(message.charAt(2))) ;
         setDeviceMessage(message.substring(5, message.length() - 2)) ;
 
     }
-
-
 }

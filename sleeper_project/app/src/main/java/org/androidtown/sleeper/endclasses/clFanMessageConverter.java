@@ -25,6 +25,10 @@ import android.util.Log;
 
 import org.androidtown.sleeper.propclasses.com_manager.clDeviceMessageConverter;
 
+/**
+ * Make and dissolve custom fan message. This is example of how developer of SleeperDevice should
+ * make message parser class using clComManager.clDeviceMessageConverter class.
+ */
 public class clFanMessageConverter extends clDeviceMessageConverter {
 
 	public static final byte FAN_ID =0x20 ;
@@ -41,10 +45,6 @@ public class clFanMessageConverter extends clDeviceMessageConverter {
 		String ControlInfo="" ;
 
 		//if command doesn't need data
-
-		Log.i("Fan Data",Byte.toString(data)) ;
-
-
 			switch (Command) {
 
 				case PWM_SET:

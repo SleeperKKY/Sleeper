@@ -75,17 +75,6 @@ public class clStatManager {
 
 		return graphList ;
 	}
-
-	/**
-	 * Set datasize of graph. All graph
-	 * @param size
-	 */
-	/*
-	public void setDataSize(int size){
-
-		dataSize=size ;
-	}
-	*/
 	
 	public void addStaticData(String dataName, String data) {
 

@@ -21,8 +21,8 @@ import android.util.Log;
 public class clResponseMessage extends clMessage {
 
     private byte ResponseType ;
-    public static final byte SUCCESS=0x02 ;
-    public static final byte FAIL=0x03 ;
+    public static final byte SUCCESS=0x03 ;
+    public static final byte FAIL=0x04 ;
 
     public clResponseMessage(){
 
@@ -70,12 +70,5 @@ public class clResponseMessage extends clMessage {
         setResponseType((byte)(message.charAt(2))) ;
         setDeviceID((byte)(message.charAt(4))) ;
         setDeviceMessage(message.substring(6,message.length() - 1)) ;
-
-        String ctrlInfo=devMsg ;
-
-        for(int i=0;i<ctrlInfo.length();i++)
-        {
-            Log.i("resmsg DeviceMsg:", Integer.toHexString(ctrlInfo.charAt(i))+" ") ;
-        }
     }
 }

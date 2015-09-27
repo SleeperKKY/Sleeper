@@ -27,12 +27,19 @@ You can visit 'propclasses' package's javadoc in this link:![JavaDoc]http://slee
 
 In order to use propclasses package, you have to add user permission below:
 
- "android.permission.ACCESS_WIFI_STATE"
- "android.permission.ACCESS_NETWORK_STATE"
- "android.permission.INTERNET"
- "android.permission.WAKE_LOCK"
- "android.permission.READ_EXTERNAL_STORAGE"
- "android.permission.WRITE_EXTERNAL_STORAGE"
+
+     "android.permission.ACCESS_WIFI_STATE"
+	 
+     "android.permission.ACCESS_NETWORK_STATE"
+	 
+     "android.permission.INTERNET"
+	 
+     "android.permission.WAKE_LOCK"
+	 
+     "android.permission.READ_EXTERNAL_STORAGE"
+	 
+     "android.permission.WRITE_EXTERNAL_STORAGE"
+	 
 
 ####1.1 app_manager
 App_manager package is head part that does control trivial things other than tracking sleep tracking like broadcasting alarm intent, get wakelock, or other sort of thing.
@@ -73,10 +80,12 @@ one device attached to controlling device. For example, we used arduino as contr
 That's why we created **clDeviceMessageConverter**, device specific message making, dissolving class that can be sent between corresponding device.
 Below is how message is being sent to remote device as request and sent back to app from device as response:
 
-Request: make device message by clDeviceMessageConverter -> put device message in clRequestMessage -> send using clComManager -> (clComManager)send message and waiting for response
 
-Response: (clComManager)message arrived remote device -> (clComManager)make response message and call onReceiveMessageEvent -> get response message -> check what device message by identifying device id
+    Request: make device message by clDeviceMessageConverter -> put device message in clRequestMessage -> send using clComManager -> (clComManager)send message and waiting for response
+
+    Response: (clComManager)message arrived remote device -> (clComManager)make response message and call onReceiveMessageEvent -> get response message -> check what device message by identifying device id
 		  -> get data and do something with that data.
+		  
 		  
 (clComManager) means job is done by clComManager. So request is simply device message -> message -> send and response is message -> device message. Simple isn't it? There's also example in "endclasses".
 Look around **clAccelTempListener** to see how **IMessageListener**'s onReceiveMessage is implemented. 
@@ -84,7 +93,7 @@ Look around **clAccelTempListener** to see how **IMessageListener**'s onReceiveM
 ###2. endclasses
 
 endclasses package is where user implementation of device controlling mechanism is placed. It consists of **clAccelTempListener**, **clFanMessageConverter**, **clTempMessageConverter**,
-**clMyDatabaseManager**. **clAccelTempListener** extended **clDataProcessor** and implemented its own device controlling mechanism.
+**clMyDatabaseManager**. **clAccelTempListener** extended **clDataProcessor** and implemented its own device controlling mechanism. Below is our example of custom-device-controlling algorithm.
 
 
 ![UserApp Sleep Caring Algorithm](./README_IMG/UserApp_Sleep_Caring_Algorithm.jpg)
@@ -106,6 +115,7 @@ Then they make their own endclasses package as jar file again and upload on webs
 Then if user(not developer) connects nearby device then app can get device's **ssid**. We can use ssid to find dataprocessor that supports currently connected device.
 
 ##Note
+
  09.20.2015
   - Feature for practising svm and svm classification is changed from PIM(Propotional Integration Mode), intensity values(sqrt(x^2+y^2+z^2) of accelerometer) to FFT(Fast Fourier Transform) coefficients since value of PIM,
     intensity values are so dependent on type of accelerometer in various smart phone. We updated all files above to meet that change.
@@ -114,4 +124,4 @@ Then if user(not developer) connects nearby device then app can get device's **s
   - Removed redundant code in clDatabaseManager in clDataProcessor and in StatisticSelectFragment.
   
  09.23.2015
-  - Fixed clComManager bug that sharing same socket reference in multiple thread and keep changing reference at each new connection is made.
+  - Fixed **clComManager** bug that sharing same socket reference in multiple thread and keep changing reference at each new connection is made.

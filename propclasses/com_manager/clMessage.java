@@ -29,8 +29,8 @@ public abstract class clMessage {
 	protected byte Header;
 	protected byte DeviceID;
 	protected String devMsg;
-	public static final byte REQ = 0x00 ;
-	public static final byte RES = 0x01 ;
+	public static final byte REQ = 0x01 ;
+	public static final byte RES = 0x02 ;
 
 	/**
 	 * Constructor
@@ -60,13 +60,6 @@ public abstract class clMessage {
 		DeviceID=_Id ;
 	}
 
-	/*
-	public void SetControlInfo(String _ControlInfo) {
-
-		ControlInfo=_ControlInfo ;
-	}
-	*/
-
 	/**
 	 * Set device message to send
 	 * @param _devMsg device message to send
@@ -93,13 +86,6 @@ public abstract class clMessage {
 
 		return DeviceID ;
 	}
-
-	/*
-	public String GetControlInfo() {
-
-		return ControlInfo ;
-	}
-	*/
 
 	/**
 	 * Get device message
