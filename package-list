@@ -1,3 +1,4 @@
+org.androidtown.sleeper.endclasses
 org.androidtown.sleeper.propclasses.app_manager
 org.androidtown.sleeper.propclasses.com_manager
 org.androidtown.sleeper.propclasses.dataprocessor_manager
