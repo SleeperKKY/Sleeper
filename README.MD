@@ -110,12 +110,9 @@ usage in endclasses package folder above and in project file.
 ##Remote device
 We used **arduino** and **esp8266** wifi module to control with wifi. Details are explained in **SleeperDevice** branch.
 
+##Current Working
+We are building and testing message parsing library for arduino. 
 
-##Future Direction
-We are currently trying to attach, switch multiple dataprocessor and find dataprocessor for corresponding remote device, extending our **clDataProcessor** by using reflection. 
-In our approach, we make 'propclasses' package as dex class file and other people can use those classes, like we did in our example user-layer package 'endclasses'.
-Then they make their own endclasses package as jar file again and upload on website. And people who use our our app can download that dex class file and put it inside some known folder in their phone's sd card. 
-Then if user(not developer) connects nearby device then app can get device's **ssid**. We can use ssid to find dataprocessor that supports currently connected device.
 
 ##Note
 
@@ -135,3 +132,7 @@ Then if user(not developer) connects nearby device then app can get device's **s
   - Modified some code in propclasses, endclasses package.
   - Changed System Overview image.
   - Changed apk files to include latest update
+  
+ 10.24.2015
+  - Added licenses(still working)
+  - Discarded 'Future Direction' section since we are focusing on building good library, not app itself.
