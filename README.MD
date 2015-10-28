@@ -116,23 +116,28 @@ We are building and testing message parsing library for arduino.
 
 ##Note
 
- 09.20.2015
+
+ ###09.20.2015
   - Feature for practising svm and svm classification is changed from PIM(Propotional Integration Mode), intensity values(sqrt(x^2+y^2+z^2) of accelerometer) to FFT(Fast Fourier Transform) coefficients since value of PIM,
     intensity values are so dependent on type of accelerometer in various smart phone. We updated all files above to meet that change.
 	
- 09.22.2015
+ ###09.22.2015
   - Removed redundant code in clDatabaseManager in clDataProcessor and in StatisticSelectFragment.
   
- 09.23.2015
+ ###09.23.2015
   - Fixed **clComManager** bug that sharing same socket reference in multiple thread and keep changing reference at each new connection is made.
   
- 09.27.2015
+ ###09.27.2015
   - Fixed error that occurs when measure is stopped. 
   - Erased some redundant code in project java files and added comments to classes in package endclasses.
   - Modified some code in propclasses, endclasses package.
   - Changed System Overview image.
   - Changed apk files to include latest update
   
- 10.24.2015
+ ###10.24.2015
   - Added licenses(still working)
   - Discarded 'Future Direction' section since we are focusing on building good library, not app itself.
+  
+ ###10.29.2015
+  - Simplifying README.MD to be read more esaily.
+  - We made message parsing library for arduino and tested successfully. We will upload it soon.
