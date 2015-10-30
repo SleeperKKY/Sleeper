@@ -141,3 +141,34 @@ We are building and testing message parsing library for arduino.
  ###10.29.2015
   - Simplifying README.MD to be read more esaily.
   - We made message parsing library for arduino and tested successfully. We will upload it soon.
+  
+ ###10.30.2015
+  - Still simplifying README.MD to be read more esaily.
+  - Made *sleeperLib.jar*. Only communication, sleep state retrival is available, discarded database since it was too user dependent.
+  - Add message parsing library for arduino to be compatible with app's communication library.
+  - Download JTransform-3.0.jar from http://mvnrepository.com/artifact/com.github.wendykierp/JTransforms/3.0 and
+    download JLargeArrays-1.2.jar from http://mvnrepository.com/artifact/pl.edu.icm/JLargeArrays/1.2 and put it in your project folder's
+	'\app\libs' folder. 
+  - Put 'armeabi' folder in '\app\libs' folder like above and put below code in your gradle (Module : app).
+	    android{
+		      ...
+            sourceSets.main{
+                jni.srcDirs = []
+                jniLibs.srcDir 'libs'
+            }
+		    ...
+	    }
+	- put below permission into your project manifest file.
+
+     "android.permission.ACCESS_WIFI_STATE"
+	 
+     "android.permission.ACCESS_NETWORK_STATE"
+	 
+     "android.permission.INTERNET"
+	 
+     "android.permission.WAKE_LOCK"
+	 
+     "android.permission.READ_EXTERNAL_STORAGE"
+	 
+     "android.permission.WRITE_EXTERNAL_STORAGE"
+	 
