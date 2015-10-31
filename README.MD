@@ -5,7 +5,7 @@
 There are so many apps that does sleep state classification but almost none are doing useful job using classified sleep state.
 And they are usually spaghetti code, which is hard to only utilize sleep state classification. So we built library *Sleeper*
 so that user can easily use sleep state classification. And also provide communication interface to control remote device 
-using those classified sleep state.
+using those classified sleep state.**
 
 We used Android Studio 1.3 to make sample project and library so there's no support for Eclipse.**
 
@@ -22,6 +22,7 @@ We used Android Studio 1.3 to make sample project and library so there's no supp
  You need to follow steps below to set your android studio project.
  
  **Android**
+ 
  (1) Download JTransform-3.0.jar from http://mvnrepository.com/artifact/com.github.wendykierp/JTransforms/3.0 and
     download JLargeArrays-1.2.jar from http://mvnrepository.com/artifact/pl.edu.icm/JLargeArrays/1.2 and put it in your project folder's
 	'\app\libs' folder. 
@@ -46,7 +47,7 @@ We used Android Studio 1.3 to make sample project and library so there's no supp
  (4) Make class of your own and extend 'clDataProcessor' class from library like below.
      Your dataprocessor has to implement 'clDataProcessor.clSleepStageClassifier.ISleepStateListener'
 	 to get sleep state classification result. *Note that classification occurs every 1 minute so 
-	 *onSleepStateRetrievedEvent* occurs every 1 minute.
+	 *onSleepStateRetrievedEvent* occurs every 1 minute.*
  
     public clMyDataProcessor extends clDataProcessor implements clDataProcessor.clSleepStageClassifier.ISleepStateListener 
 	{
@@ -93,32 +94,31 @@ We used Android Studio 1.3 to make sample project and library so there's no supp
 
 ##Note
 
-
- ###09.20.2015
+ ### 09.20.2015
   - Feature for practising svm and svm classification is changed from PIM(Propotional Integration Mode), intensity values(sqrt(x^2+y^2+z^2) of accelerometer) to FFT(Fast Fourier Transform) coefficients since value of PIM,
     intensity values are so dependent on type of accelerometer in various smart phone. We updated all files above to meet that change.
 	
- ###09.22.2015
+ ### 09.22.2015
   - Removed redundant code in clDatabaseManager in clDataProcessor and in StatisticSelectFragment.
   
- ###09.23.2015
+ ### 09.23.2015
   - Fixed **clComManager** bug that sharing same socket reference in multiple thread and keep changing reference at each new connection is made.
   
- ###09.27.2015
+ ### 09.27.2015
   - Fixed error that occurs when measure is stopped. 
   - Erased some redundant code in project java files and added comments to classes in package endclasses.
   - Modified some code in propclasses, endclasses package.
   - Changed System Overview image.
   - Changed apk files to include latest update
   
- ###10.24.2015
+ ### 10.24.2015
   - Added licenses(still working)
   - Discarded 'Future Direction' section since we are focusing on building good library, not app itself.
   
- ###10.29.2015
+ ### 10.29.2015
   - Simplifying README.MD to be read more esaily.
   - We made message parsing library for arduino and tested successfully. We will upload it soon.
   
- ###10.30.2015
+ ### 10.30.2015
   - Still simplifying README.MD to be read more esaily.
 	 
