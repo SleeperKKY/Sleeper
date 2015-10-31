@@ -19,7 +19,7 @@ We used Android Studio 1.3 to make sample project and library so there's no supp
 
 
 ##How To Use
- You need to follow steps below to set your android studio project.
+ You need to follow steps below to set your android studio project. 'Sample1' is android project file that followed below (1) to (5) steps.
  
  **Android**
  
@@ -38,7 +38,9 @@ We used Android Studio 1.3 to make sample project and library so there's no supp
 		    ...
 	    }
 		
- (3) Add below permission to manifest file of your project.
+ (3) Put 'SvmFile' folder in your smart phone sd card, the base directory when you plug your phone into computer.
+		
+ (4) Add below permission to manifest file of your project.
  
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
@@ -47,10 +49,10 @@ We used Android Studio 1.3 to make sample project and library so there's no supp
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
 	 
- (4) Make class of your own and extend 'clDataProcessor' class from library like below.
+ (5) Make class of your own and extend 'clDataProcessor' class from library like below.
      Your dataprocessor has to implement 'clDataProcessor.clSleepStageClassifier.ISleepStateListener'
 	 to get sleep state classification result. *Note that classification occurs every 1 minute so 
-	 *onSleepStateRetrievedEvent* occurs every 1 minute.*
+	 *onSleepStateRetrievedEvent* occurs every 1 minute.
  
     public clMyDataProcessor extends clDataProcessor implements clDataProcessor.clSleepStageClassifier.ISleepStateListener 
 	{
@@ -84,9 +86,9 @@ We used Android Studio 1.3 to make sample project and library so there's no supp
 	 ...
 	}
 	
-   (5) Now, you can use our library. Above steps only covers how to use sleep state classifier. If you don't want to
-	   coummunicate with Arduino or other remote device then your job is done. If you want to use arduino with it then
-	   you have to follow below steps and see **Arduino** section below. We will update shortly.
+ (6) Now, you can use our library. Above steps only covers how to use sleep state classifier. If you don't want to
+	 coummunicate with Arduino or other remote device then your job is done. If you want to use arduino with it then
+	 you have to follow below steps and see **Arduino** section below. We will update shortly.
 	
 	
 	 
