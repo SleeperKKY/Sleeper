@@ -19,7 +19,11 @@ We used Android Studio 1.3 to make sample project and library so there's no supp
 
 
 ##How To Use
- You need to follow steps below to set your android studio project. 'Sample1' is android project file that followed below (1) to (5) steps.
+ You need to follow steps below to set your android studio project. 
+ 'Sample1' is android project file that followed below (1) to (5) steps. And 'Sample2' followed further (6) to (11). If you want only sleep classifier,
+ see 'Sample1'. If you want communication too, then see 'Sample2'. Sample2 project need corresponding arduino project, 'ControlTemp'. You can see in
+ *SleeperDevice* branch.
+ 
  You need :
   - JTransform-3.0.jar
   - JLargeArrays-1.2.jar
@@ -59,43 +63,90 @@ We used Android Studio 1.3 to make sample project and library so there's no supp
 	 to get sleep state classification result. *Note that classification occurs every 1 minute so 
 	 *onSleepStateRetrievedEvent* occurs every 1 minute.
  
-    public clMyDataProcessor extends clDataProcessor implements clDataProcessor.clSleepStageClassifier.ISleepStateListener 
-	{
-	  ...
+     public clMyDataProcessor extends clDataProcessor implements clDataProcessor.clSleepStageClassifier.ISleepStateListener 
+	 {
+	   ...
 	  
-	   protected MyDataProcessor(Context context) {
-        super(context);
-
-        sleepStageClassifier=getSleepStageClassifier() ;//get sleep state classifier from clDataProcessor class
-
-        sleepStageClassifier.registerSleepStateListener(this);//register to sleep state classifier
-      }
-	  
-	  public void onSleepStateRetrievedEvent(int sleepState, Double[] doubles) {
-	  
-		///Do your stuff using sleepState, which is classified sleep state.
-	  }
-	}
+	    protected MyDataProcessor(Context context) {
+         super(context);
+ 
+         sleepStageClassifier=getSleepStageClassifier() ;//get sleep state classifier from clDataProcessor class
+ 
+         sleepStageClassifier.registerSleepStateListener(this);//register to sleep state classifier
+       }
+	   
+	   public void onSleepStateRetrievedEvent(int sleepState, Double[] doubles) {
+	   
+	 	///Do your stuff using sleepState, which is classified sleep state.
+	   }
+	 }
 	 
    And create instance of clApp and your dataprocessor clMyDataProcessor in main activity's onCreate method.
    
-    public class MainActivity extends Activity{
-	 private clApp myAPP=null ;
-	 ...
-	    protected void onCreate(Bundle savedInstanceState){
+     public class MainActivity extends Activity{
+	  private clApp myAPP=null ;
+	  ...
+	     protected void onCreate(Bundle savedInstanceState){
+		 
+		 	...
+		  clDataProcessor dataProcessor=new MyDataProcessor(this) ;
+          myApp=new clApp(this,dataProcessor) ;
+		 }
+	  ...
+	 }
+	
+ (6) Above steps only covers how to use sleep state classifier. *Sample1* project shows step (1)-(5)
+     If you don't want to coummunicate with Arduino or other remote device then your job is done here. 
+	 If you want to use arduino with it then you have to follow below steps.
+	
+ (7) Create instance of clComManager. Let's say comManager. You have to implement *clComManager.IMessageListener* to get response
+     message. Add it behind ISleepStateListener.
+
+      public class MyDataProcessor extends clDataProcessor implements clDataProcessor.clSleepStageClassifier.ISleepStateListener,
+                                                                      clComManager.IMessageListener
+      {
+	    ...
+	  }
+ 
+ (8) Set ip address, port of remote device which work as tcp server. 
+     **If you instantiated clApp like step (5), you don't need to set ip address since it will automatically set ip address of remote device
+	 using broadcast receiver to catch wifi intent. If you didn't, you have to manually ip address.**
+	 
+ (9) Set timeout, which indicate how much time you will wait until response message come back. Below is code for summary of (7) - (9)
+ 
+     protected MyDataProcessor(Context context) {
+		...
+         comManager=new clComManager(this) ;//register IMessageListener
+         comManager.setTimeoutUnit(5000);//set connection timeout
+         comManager.setTimeoutCount(2);//set how many timeout to be tolerable
+
+		 //clComManager.setIpAddr(ipaddr)// manually set ip address if you didn't instantiate clApp
+         clComManager.setPort(8090) ;//set port
+		...
+	 }
+	 
+ (10) Now, you're ready to communicate with remote device. Make request message. Set device id(like TEMP_ID=0x00), command, data(if you need)
+	  in request message and send. Then send that request message using comManager. First connect and send. It's done.
+	  **Note that clComManager makes non-persistent-connection to remote device so it will automatically disconnect after message
+	  is sent. So you don't have to call comManager.disconnect().**
+	  
+        //send 'get temperature' command
+        clRequestMessage reqMsg=new clRequestMessage() ;
+        reqMsg.setDeviceID(TEMP_SENSOR) ;
+        reqMsg.setCommand(TEMP_GET_TEMP) ;
+        comManager.connect() ;
+        comManager.send(reqMsg,true) ;
 		
-			...
-		 clDataProcessor dataProcessor=new MyDataProcessor(this) ;
-         myApp=new clApp(this,dataProcessor) ;
-		}
-	 ...
+ (11) Then, in onReceiveMessageEvent, you can do your stuff with response message.
+ 
+    @Override
+    public void onReceiveMessageEvent(clResponseMessage ResponseMessage) {
+	
+	  //do your stuff
 	}
 	
- (6) Now, you can use our library. Above steps only covers how to use sleep state classifier. If you don't want to
-	 coummunicate with Arduino or other remote device then your job is done. If you want to use arduino with it then
-	 you have to follow below steps and see **Arduino** section below. We will update shortly.
-	
-	
+ (12) Now, you can also communicate with your remote device. Example project is *Sample2* project. And corresponding arduino project is 
+      ControlTemp.
 	 
 	 
  **Arduino**
