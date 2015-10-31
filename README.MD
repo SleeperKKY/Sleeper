@@ -26,7 +26,7 @@ We used Android Studio 1.3 to make sample project and library so there's no supp
   - sleeperlib.jar
   - armeabi(containing compiled library file)
  
- **Android**
+ ####**Android**: [JAVADOC][http://sleeperkky.github.io/Sleeper/]
  
  (1) Download JTransform-3.0.jar from http://mvnrepository.com/artifact/com.github.wendykierp/JTransforms/3.0 and
     download JLargeArrays-1.2.jar from http://mvnrepository.com/artifact/pl.edu.icm/JLargeArrays/1.2. Also download 'sleeperlib.jar' above and
