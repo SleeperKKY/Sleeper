@@ -60,12 +60,12 @@ We used Android Studio 1.3 to make sample project and library so there's no supp
 	 
  (5) Make class of your own and extend 'clDataProcessor' class from library like below.
      Your dataprocessor has to implement 'clDataProcessor.clSleepStageClassifier.ISleepStateListener'
-	 to get sleep state classification result. *Note that classification occurs every 1 minute so 
+	 to get sleep state classification result. Note that classification occurs every 1 minute so 
 	 *onSleepStateRetrievedEvent* occurs every 1 minute.
  
-     public clMyDataProcessor extends clDataProcessor implements clDataProcessor.clSleepStageClassifier.ISleepStateListener 
-	 {
-	   ...
+      public clMyDataProcessor extends clDataProcessor implements clDataProcessor.clSleepStageClassifier.ISleepStateListener 
+	  {
+	    ...
 	  
 	    protected MyDataProcessor(Context context) {
          super(context);
@@ -73,13 +73,13 @@ We used Android Studio 1.3 to make sample project and library so there's no supp
          sleepStageClassifier=getSleepStageClassifier() ;//get sleep state classifier from clDataProcessor class
  
          sleepStageClassifier.registerSleepStateListener(this);//register to sleep state classifier
-       }
+        }
 	   
-	   public void onSleepStateRetrievedEvent(int sleepState, Double[] doubles) {
+	    public void onSleepStateRetrievedEvent(int sleepState, Double[] doubles) {
 	   
-	 	///Do your stuff using sleepState, which is classified sleep state.
-	   }
-	 }
+	 	 ///Do your stuff using sleepState, which is classified sleep state.
+	    }
+	  }
 	 
    And create instance of clApp and your dataprocessor clMyDataProcessor in main activity's onCreate method.
    
@@ -113,17 +113,17 @@ We used Android Studio 1.3 to make sample project and library so there's no supp
 	 using broadcast receiver to catch wifi intent. If you didn't, you have to manually ip address.**
 	 
  (9) Set timeout, which indicate how much time you will wait until response message come back. Below is code for summary of (7) - (9)
- 
-     protected MyDataProcessor(Context context) {
-		...
+     
+        protected MyDataProcessor(Context context) {
+		    ...
          comManager=new clComManager(this) ;//register IMessageListener
          comManager.setTimeoutUnit(5000);//set connection timeout
          comManager.setTimeoutCount(2);//set how many timeout to be tolerable
 
 		 //clComManager.setIpAddr(ipaddr)// manually set ip address if you didn't instantiate clApp
          clComManager.setPort(8090) ;//set port
-		...
-	 }
+		   ...
+	    }
 	 
  (10) Now, you're ready to communicate with remote device. Make request message. Set device id(like TEMP_ID=0x00), command, data(if you need)
 	  in request message and send. Then send that request message using comManager. First connect and send. It's done.
