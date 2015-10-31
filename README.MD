@@ -51,12 +51,12 @@ We used Android Studio 1.3 to make sample project and library so there's no supp
 		
  (4) Add below permission to manifest file of your project.
  
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+     <uses-permission android:name="android.permission.INTERNET"/>
+     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+     <uses-permission android:name="android.permission.WAKE_LOCK"/>
 	 
  (5) Make class of your own and extend 'clDataProcessor' class from library like below.
      Your dataprocessor has to implement 'clDataProcessor.clSleepStageClassifier.ISleepStateListener'
@@ -182,4 +182,11 @@ We used Android Studio 1.3 to make sample project and library so there's no supp
   
  ### 10.30.2015
   - Still simplifying README.MD to be read more esaily.
+  
+ ### 10.31.2015
+  - Uploaded sleeper library.
+  - Uploaded sample android project files.
+  - Uploaded sleeper library for arduino.
+  - Uploaded sample arduino project.
+  - Changed README.MD to contain how to use library.
 	 
