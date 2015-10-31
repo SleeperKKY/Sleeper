@@ -20,13 +20,18 @@ We used Android Studio 1.3 to make sample project and library so there's no supp
 
 ##How To Use
  You need to follow steps below to set your android studio project. 'Sample1' is android project file that followed below (1) to (5) steps.
+ You need :
+  - JTransform-3.0.jar
+  - JLargeArrays-1.2.jar
+  - sleeperlib.jar
+  - armeabi(containing compiled library file)
  
  **Android**
  
  (1) Download JTransform-3.0.jar from http://mvnrepository.com/artifact/com.github.wendykierp/JTransforms/3.0 and
-    download JLargeArrays-1.2.jar from http://mvnrepository.com/artifact/pl.edu.icm/JLargeArrays/1.2 and put it in your project folder's
-	'\app\libs' folder. 
-	
+    download JLargeArrays-1.2.jar from http://mvnrepository.com/artifact/pl.edu.icm/JLargeArrays/1.2. Also download 'sleeperlib.jar' above and
+	put it in your project folder's '\app\libs' folder.
+
  (2) Put 'armeabi' folder in your project folder's '\app\libs' folder like above and put below code in your gradle (Module : app).
 	    
 		android{
