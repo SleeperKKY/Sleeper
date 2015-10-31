@@ -15,6 +15,8 @@
     And our 'clMessage' will parse data into meaningful data unit.
 	
  - It is compatible with our android application library SleeperApp's sleeperLib.jar's clComManager class.
+ 
+ - Working to provide steps to use our message parsing class.
 	
 	
 	
