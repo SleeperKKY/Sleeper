@@ -1,11 +1,11 @@
 #Sleeper
 
 ##Summary
-** _Sleeper_ is a library that provides sleep state classification interface and communication interface with remote device.
+_Sleeper_ is a library that provides sleep state classification interface and communication interface with remote device.
 There are so many apps that does sleep state classification but almost none are doing useful job using classified sleep state.
 And they are usually spaghetti code, which is hard to only utilize sleep state classification. So we built library _Sleeper_
 so that user can easily use sleep state classification. And also provide communication interface to control remote device 
-using those classified sleep state.**
+using those classified sleep state.
 
 We used Android Studio 1.3 to make sample project and library so there's no support for Eclipse.**
 
@@ -28,7 +28,8 @@ We used Android Studio 1.3 to make sample project and library so there's no supp
 	'\app\libs' folder. 
 	
  (2) Put 'armeabi' folder in your project folder's '\app\libs' folder like above and put below code in your gradle (Module : app).
-	    android{
+	    
+		android{
 		      ...
             sourceSets.main{
                 jni.srcDirs = []
