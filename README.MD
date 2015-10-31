@@ -51,12 +51,12 @@ We used Android Studio 1.3 to make sample project and library so there's no supp
 		
  (4) Add below permission to manifest file of your project.
  
-     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
-     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-     <uses-permission android:name="android.permission.INTERNET"/>
-     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-     <uses-permission android:name="android.permission.WAKE_LOCK"/>
+        <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+        <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+        <uses-permission android:name="android.permission.INTERNET"/>
+        <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+        <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+        <uses-permission android:name="android.permission.WAKE_LOCK"/>
 	 
  (5) Make class of your own and extend 'clDataProcessor' class from library like below.
      Your dataprocessor has to implement 'clDataProcessor.clSleepStageClassifier.ISleepStateListener'
@@ -83,17 +83,17 @@ We used Android Studio 1.3 to make sample project and library so there's no supp
 	 
    And create instance of clApp and your dataprocessor clMyDataProcessor in main activity's onCreate method.
    
-     public class MainActivity extends Activity{
-	  private clApp myAPP=null ;
-	  ...
-	     protected void onCreate(Bundle savedInstanceState){
+       public class MainActivity extends Activity{
+	     private clApp myAPP=null ;
+	       ...
+	      protected void onCreate(Bundle savedInstanceState){
 		 
 		 	...
-		  clDataProcessor dataProcessor=new MyDataProcessor(this) ;
-          myApp=new clApp(this,dataProcessor) ;
-		 }
-	  ...
-	 }
+		    clDataProcessor dataProcessor=new MyDataProcessor(this) ;
+            myApp=new clApp(this,dataProcessor) ;
+		  }
+	       ...
+	    }
 	
  (6) Above steps only covers how to use sleep state classifier. *Sample1* project shows step (1)-(5)
      If you don't want to coummunicate with Arduino or other remote device then your job is done here. 
