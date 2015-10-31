@@ -1,9 +1,9 @@
 #Sleeper
 
 ##Summary
-** *Sleeper* is a library that provides sleep state classification interface and communication interface with remote device.
+** _Sleeper_ is a library that provides sleep state classification interface and communication interface with remote device.
 There are so many apps that does sleep state classification but almost none are doing useful job using classified sleep state.
-And they are usually spaghetti code, which is hard to only utilize sleep state classification. So we built library *Sleeper*
+And they are usually spaghetti code, which is hard to only utilize sleep state classification. So we built library _Sleeper_
 so that user can easily use sleep state classification. And also provide communication interface to control remote device 
 using those classified sleep state.**
 
@@ -26,6 +26,7 @@ We used Android Studio 1.3 to make sample project and library so there's no supp
  (1) Download JTransform-3.0.jar from http://mvnrepository.com/artifact/com.github.wendykierp/JTransforms/3.0 and
     download JLargeArrays-1.2.jar from http://mvnrepository.com/artifact/pl.edu.icm/JLargeArrays/1.2 and put it in your project folder's
 	'\app\libs' folder. 
+	
  (2) Put 'armeabi' folder in your project folder's '\app\libs' folder like above and put below code in your gradle (Module : app).
 	    android{
 		      ...
@@ -35,6 +36,7 @@ We used Android Studio 1.3 to make sample project and library so there's no supp
             }
 		    ...
 	    }
+		
  (3) Add below permission to manifest file of your project.
  
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
@@ -94,7 +96,7 @@ We used Android Studio 1.3 to make sample project and library so there's no supp
 
 ##Note
 
- ### 09.20.2015
+ 09.20.2015
   - Feature for practising svm and svm classification is changed from PIM(Propotional Integration Mode), intensity values(sqrt(x^2+y^2+z^2) of accelerometer) to FFT(Fast Fourier Transform) coefficients since value of PIM,
     intensity values are so dependent on type of accelerometer in various smart phone. We updated all files above to meet that change.
 	
