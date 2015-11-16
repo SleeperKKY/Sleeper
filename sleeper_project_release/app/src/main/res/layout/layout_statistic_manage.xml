@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_weight="0.05"
+        android:layout_below="@+id/radioGroup"
+        android:layout_alignParentStart="true"
+        android:id="@+id/frameLayout"></FrameLayout>
+
+    <!--
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="샘플 통계 보기"
+        android:layout_below="@+id/graph"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:id="@+id/btnStatview"/>
+-->
+
+    <RadioGroup
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentStart="true"
+        android:id="@+id/radioGroup"
+        android:orientation="horizontal"></RadioGroup>
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/tableLayout"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/frameLayout"
+        android:layout_above="@+id/seekBar"></TableLayout>
+
+    <SeekBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/seekBar"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true" />
+
+    <!--
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="연결된 기기가 없습니다."
+            android:id="@+id/textView"
+            android:layout_marginTop="50dp"
+            android:layout_marginLeft="30dp"/>
+
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/btnConnect"
+            android:text="연결"
+            android:layout_toRightOf="@+id/textView"
+            android:layout_marginTop="40dp"
+            android:layout_marginLeft="10dp"/>
+
+        <Button
+            android:id="@+id/btnSelectAutoMode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/btnConnect"
+            android:layout_marginLeft="110dp"
+            android:text="자동" />
+
+        <Button
+            android:id="@+id/btnSelectManualMode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/btnSelectAutoMode"
+            android:layout_alignTop="@id/btnSelectAutoMode"
+            android:text="수동"
+            />
+            -->
+
+</RelativeLayout>
