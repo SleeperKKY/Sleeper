@@ -11,8 +11,10 @@ We used Android Studio 1.3 to make sample project and library so there's no supp
 
 
 ##System Overview
+###System Overview
 ![System Overview](./README_IMG/SystemOverview.jpg)
 
+###Sleeper App Flowchart
 ![Sleeper App Flowchart](./README_IMG/UserApp_Sleep_Caring_Algorithm.jpg)
 
 ##Sleep State Classifier
