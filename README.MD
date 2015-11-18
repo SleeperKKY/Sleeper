@@ -13,6 +13,8 @@ We used Android Studio 1.3 to make sample project and library so there's no supp
 ##System Overview
 ![System Overview](./README_IMG/SystemOverview.jpg)
 
+![Sleeper App Flowchart](./README_IMG/UserApp_Sleep_Caring_Algorithm.jpg)
+
 ##Sleep State Classifier
  This classifier is implemented in clDataProcessor. It classifies sleep state every 1 minute and it is not changeable. So you have to
  note this fact to make your app.
@@ -152,10 +154,15 @@ We used Android Studio 1.3 to make sample project and library so there's no supp
  **Arduino**
  
  - Go to 'SleeperDevice' branch and see 'Note' section.
+ 
+##Currently Working
+ Working on extraction of breathe feature to add to svm feature for sleep stage classification using audio recorder. This may take long time
+ since major developer Kang Shin Wook will go to military service.
 
 ##Note
 
- 09.20.2015
+
+ ### 09.20.2015
   - Feature for practising svm and svm classification is changed from PIM(Propotional Integration Mode), intensity values(sqrt(x^2+y^2+z^2) of accelerometer) to FFT(Fast Fourier Transform) coefficients since value of PIM,
     intensity values are so dependent on type of accelerometer in various smart phone. We updated all files above to meet that change.
 	
@@ -189,4 +196,6 @@ We used Android Studio 1.3 to make sample project and library so there's no supp
   - Uploaded sleeper library for arduino.
   - Uploaded sample arduino project.
   - Changed README.MD to contain how to use library.
-	 
+  
+ ### 11.19.2015
+  - Added flowchart of Sleeper App in 'sleeper_project_release'.
