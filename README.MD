@@ -10,9 +10,9 @@ using those classified sleep state.
 We used Android Studio 1.3 to make sample project and library so there's no support for Eclipse.**
 
 
-##System Overview
-###System Overview
-![System Overview](./README_IMG/SystemOverview.jpg)
+##Overview
+###Library Overview
+![Library Overview](./README_IMG/SystemOverview.jpg)
 
 ###Sleeper App Flowchart
 ![Sleeper App Flowchart](./README_IMG/UserApp_Sleep_Caring_Algorithm.jpg)
